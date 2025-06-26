@@ -40,6 +40,6 @@ class Stallrentaldet extends Model
     //views table
     public function stallProfileViews()
     {
-        return $this->hasOne(stallProfileViews::class, 'stallNo', 'stallNo');
+        return $this->hasOne(StallProfileViews::class, 'stallNo', 'stallNo');
     }
 }
