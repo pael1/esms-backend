@@ -24,6 +24,18 @@ class Api
         return 'Failed.';
     }
 
+    public function checkPopsStatus()
+    {
+        try {
+            Http::timeout(10)->get("{$this->apiEndpoint}/op/OBPS-24-012345");
+            return 'Up';
+        } catch (RequestException $e) {
+            return 'Down';
+        } catch (\Exception $e) {
+            return 'Down';
+        }
+    }
+
     public function accountCodes($office_code)
     {
         $response = Http::get("{$this->apiEndpoint}/accountcodes/{$office_code}");

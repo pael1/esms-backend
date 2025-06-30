@@ -122,8 +122,9 @@ class AwardeeService implements AwardeeServiceInterface
     public function current_billing(object $payload)
     {
         $connection = $this->popsApi->connect();
+        $serverStatus = $this->popsApi->checkPopsStatus();
 
-        if ($connection === "Success.") {
+        if ($connection === "Success." && $serverStatus === 'Up') {
 
             $has_extension = ($payload->extension == "0.00") ? false : true;
 
@@ -213,7 +214,7 @@ class AwardeeService implements AwardeeServiceInterface
         }
 
         return response()->json([
-            'message' => 'Error'
-        ] . Response::HTTP_BAD_REQUEST);
+            'message' => 'POPS server down.'
+        ], Response::HTTP_BAD_REQUEST);
     }
 }
