@@ -24,15 +24,17 @@ class UserService implements UserServiceInterface
         return UserAccountResource::collection($users);
     }
 
-    public function findUserById(string $UserId){
+    public function findUserById(string $UserId)
+    {
 
         $user = $this->userRepository->findById($UserId);
-        
+
         // return UserResource::collection($user); for multiple data
         return new UserAccountResource($user); //for only 1 data
     }
 
-    public function findUserByEmail(string $email){
+    public function findUserByEmail(string $email)
+    {
 
         $user = $this->userRepository->findByEmail($email);
 

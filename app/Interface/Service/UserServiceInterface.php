@@ -6,7 +6,7 @@ interface UserServiceInterface
 {
     public function findManyUsers(object $payload);
 
-    public function findAwardeeById(string $id);
+    // public function findAwardeeById(string $id);
 
     public function findUserByEmail(string $email);
 
