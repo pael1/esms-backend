@@ -2,26 +2,24 @@
 
 namespace App\Repository;
 
-use App\Models\User;
-use App\Models\UserAccount;
-use Illuminate\Http\Response;
-use App\Models\StallOwnerAccount;
-use Illuminate\Support\Facades\Hash;
-use App\Interface\Service\LedgerServiceInterface;
-use App\Interface\Repository\UserRepositoryInterface;
-use App\Interface\Repository\LedgerRepositoryInterface;
+use App\Interface\Repository\OpRepositoryInterface;
+use App\Models\Parameter;
+use App\Models\StallOP;
 
-class LedgerRepository implements LedgerRepositoryInterface
+class OpRepository implements OpRepositoryInterface
 {
 
-    public function findManyLedger(object $payload)
+    public function findMany(object $payload)
     {
-        return StallOwnerAccount::where('ownerId', $payload->ownerId)
-            ->whereNull('ORNum')
-            ->paginate(10);
+        return StallOP::where('OPRefId', $payload->oprefid)->get();
     }
 
-    public function createLedger(object $payload)
+    public function findById(string $id)
+    {
+        // return Parameter::where('fieldId', $id);
+    }
+
+    public function create(object $payload)
     {
         // $user = new User();
         // $user->username = $payload->username;
@@ -32,7 +30,7 @@ class LedgerRepository implements LedgerRepositoryInterface
         // return $user->fresh();
     }
 
-    public function updateLedger(object $payload, string $id)
+    public function update(object $payload, string $id)
     {
         // $user = User::findOrFail($id);
         // $user->username = $payload->username;
@@ -43,7 +41,7 @@ class LedgerRepository implements LedgerRepositoryInterface
         // return $user->fresh();
     }
 
-    public function deleteLedger(string $id)
+    public function delete(string $id)
     {
         // $user = User::findOrFail($id);
         // $user->delete();

@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AwardeeController;
 use App\Http\Controllers\Api\ChildrenController;
 use App\Http\Controllers\Api\LedgerController;
+use App\Http\Controllers\Api\OpController;
+use App\Http\Controllers\Api\ParameterController;
 use App\Http\Controllers\Api\UserController;
 
 // Route::get('/user', function (Request $request) {
@@ -24,6 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
         'awardees' => AwardeeController::class,
         'ledgers' => LedgerController::class,
         'childrens' => ChildrenController::class,
+        'parameters' => ParameterController::class,
+        'ops' => OpController::class,
     ]);
 
     Route::prefix('awardees')->group(function () {

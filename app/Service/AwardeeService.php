@@ -12,6 +12,8 @@ use App\Models\StallProfileViews;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\StallOPResource;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\ErrorHandler\Debug;
 use App\Http\Resources\StallOwnerResource;
 use App\Http\Resources\AwardeeListResource;
 use App\Http\Resources\UserAccountResource;
@@ -23,7 +25,6 @@ use App\Http\Resources\StallOwnerAccountResource;
 use App\Http\Resources\StallProfileViewsResource;
 use App\Interface\Service\AwardeeServiceInterface;
 use App\Interface\Repository\AwardeeRepositoryInterface;
-use Symfony\Component\ErrorHandler\Debug;
 
 class AwardeeService implements AwardeeServiceInterface
 {
@@ -195,8 +196,7 @@ class AwardeeService implements AwardeeServiceInterface
 
             //save to pops
             $payload->items = $itemsPaid;
-            $test = $this->popsApi->createPayment($payload);
-            Logger($test);
+            // $this->popsApi->createPayment($payload);
 
             // $stall_profile->account_codes = $accountCodes;
             $pdf = Pdf::loadView('pdf.top', [
@@ -205,10 +205,19 @@ class AwardeeService implements AwardeeServiceInterface
                 'account_code_details' => $itemsPaid,
                 'total_amount' => $totalAmount,
                 'op_number' => $OPRefId,
+                'owner_id' => $payload->ownerId,
+                'op_date' => Carbon::now()->format('F j, Y'),
                 'op_sys' => 'ESMS',
+                'post_by' => $payload->postBy,
                 'remarks' => "",
                 'valid_until_date' => $this->awardeeRepository->OPDueDate(true),
             ]);
+
+            // Define filename and path
+            $filename = "ops/{$payload->ownerId}/OP_{$OPRefId}.pdf";
+
+            // Save PDF content to storage/app/pdfs/OP_12345.pdf
+            Storage::put($filename, $pdf->output());
 
             return response($pdf->output(), 200)->header('Content-Type', 'application/pdf');
         }

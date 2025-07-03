@@ -44,6 +44,7 @@ class AwardeeRepository implements AwardeeRepositoryInterface
             ->where('a.ownerStatus', 'ACTIVE')
             ->where('c.marketcode', $payload->marketcode)
             ->where('c.stallType', $payload->type)
+            ->whereRaw('SUBSTRING(c.sectionCode, 3, 2) = ?', [$payload->section])
             ->where('c.stallNoId', '!=', '')
             ->whereNotNull('c.stallNoId')
             ->when($payload->first_name, fn($q) => $q->where('a.firstname', $payload->first_name))
@@ -69,7 +70,7 @@ class AwardeeRepository implements AwardeeRepositoryInterface
     public function find_many_transactions(object $payload)
     {
         return StallOP::where('ownerId', $payload->ownerId)
-            ->orderBy('OPRefId', 'desc')
+            ->orderBy('stallOPId', 'desc')
             ->groupBy('OPRefId')
             ->paginate(10);
     }
@@ -229,7 +230,7 @@ class AwardeeRepository implements AwardeeRepositoryInterface
         $op->postBy = $payload->postBy;
         $op->signatoryid = $stallprofile->signatory->signatoryId;
         $op->purpose = $payload->purpose;
-        $op->opTN = "optn";
+        $op->opTN = 'M' . str_replace('-', '', $payload->OPRefId);
         $op->fk = 0;
         $op->save();
 
