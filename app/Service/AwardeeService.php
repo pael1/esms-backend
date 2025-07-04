@@ -198,7 +198,9 @@ class AwardeeService implements AwardeeServiceInterface
 
             //save to pops
             $payload->items = $itemsPaid;
-            // $this->popsApi->createPayment($payload);
+            if (!app()->environment('local')) {
+                $this->popsApi->createPayment($payload);
+            }
 
             // $stall_profile->account_codes = $accountCodes;
             $pdf = Pdf::loadView('pdf.top', [
