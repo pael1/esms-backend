@@ -4,7 +4,6 @@ namespace App\Interface\Repository;
 
 interface UserRepositoryInterface
 {
-
     public function findMany(object $payload);
 
     public function findById(string $UserId);

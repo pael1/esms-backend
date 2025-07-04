@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 
 class StallProfileViews extends Model
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'vtlstallrates';
     // protected $primaryKey = 'stallProfileId ';
@@ -25,6 +25,6 @@ class StallProfileViews extends Model
         'stallAreaExt',
         'Total_extensionRate',
         'Total_baseRate',
-        'RatePerDay'
+        'RatePerDay',
     ];
 }

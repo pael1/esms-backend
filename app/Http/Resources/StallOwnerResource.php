@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\StallOwnerChildResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StallOwnerResource extends JsonResource
@@ -21,7 +20,7 @@ class StallOwnerResource extends JsonResource
             'lastname' => $this->lastname,
             'firstname' => $this->firstname,
             'midinit' => $this->midinit,
-            'full_name' => $this->firstname . ' ' . $this->midinit . '. ' . $this->lastname,
+            'full_name' => $this->firstname.' '.$this->midinit.'. '.$this->lastname,
             'civilStatus' => $this->civilStatus,
             'address' => $this->address,
             'spouseLastname' => $this->spouseLastname,
@@ -32,7 +31,7 @@ class StallOwnerResource extends JsonResource
             'dateRegister' => $this->dateRegister,
             'contactnumber' => $this->contactnumber,
             'childrens' => StallOwnerChildResource::collection($this->whenLoaded('childrens')),
-            'ledger' => StallOwnerAccountResource::collection($this->whenLoaded('ledger'))
+            'ledger' => StallOwnerAccountResource::collection($this->whenLoaded('ledger')),
         ];
     }
 }

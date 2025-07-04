@@ -18,6 +18,7 @@ class ParameterService implements ParameterServiceInterface
     public function findMany(object $payload)
     {
         $parameter = $this->parameterRepository->findMany($payload);
+
         return ParameterResource::collection($parameter);
     }
 

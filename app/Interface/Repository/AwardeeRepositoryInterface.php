@@ -20,13 +20,13 @@ interface AwardeeRepositoryInterface
 
     public function findByOwnerId(string $AwardeeId);
 
-    public function findByUsername(string $email);
+    // public function findByUsername(string $email);
 
-    public function create(object $payload);
+    // public function create(object $payload);
 
-    public function update(object $payload, string $id);
+    // public function update(object $payload, string $id);
 
-    public function delete(string $id);
+    // public function delete(string $id);
 
-    public function current_billing(object $payload);
+    // public function current_billing(object $payload);
 }

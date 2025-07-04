@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserDetail extends Model
 {
@@ -14,10 +13,10 @@ class UserDetail extends Model
     protected $fillable = [
         'user_id',
         'address',
-        'birthday'
+        'birthday',
     ];
 
-    public function user(): BelongsTo 
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

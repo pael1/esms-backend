@@ -4,7 +4,6 @@ namespace App\Interface\Repository;
 
 interface ParameterRepositoryInterface
 {
-
     public function findMany(object $payload);
 
     public function findByFieldId(string $id);

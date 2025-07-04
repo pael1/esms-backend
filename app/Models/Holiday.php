@@ -19,10 +19,10 @@ class Holiday extends Model
         'RefDoc',
         'DateTimeCreated',
         'CreatedBy',
-        'holidayType'
+        'holidayType',
     ];
 
-    // public function user(): BelongsTo 
+    // public function user(): BelongsTo
     // {
     //     return $this->belongsTo(UserAccount::class, 'SystemUser_EmpId', 'EmpId');
     // }

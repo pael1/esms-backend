@@ -20,7 +20,7 @@ class ParameterResource extends JsonResource
             'fieldValue' => $this->fieldValue,
             'fieldDescription' => $this->fieldDescription,
             'dateTimeEncoded' => $this->dateTimeEncoded,
-            'encodedBy' => $this->encodedBy
+            'encodedBy' => $this->encodedBy,
         ];
     }
 }

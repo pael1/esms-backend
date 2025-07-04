@@ -2,10 +2,9 @@
 
 namespace App\Interface\Service;
 
-interface AuthServiceInterface {
-
+interface AuthServiceInterface
+{
     public function login(object $payload);
 
     public function logout(object $payload);
-
 }

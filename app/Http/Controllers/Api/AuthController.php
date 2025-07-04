@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\AuthRequest;
 use App\Interface\Service\AuthServiceInterface;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {

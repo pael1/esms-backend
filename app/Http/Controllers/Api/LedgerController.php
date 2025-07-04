@@ -23,6 +23,11 @@ class LedgerController extends Controller
         return $this->ledgerService->findManyLedger($request);
     }
 
+    public function arrears(Request $request)
+    {
+        return $this->ledgerService->findManyLedgerArrears($request);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

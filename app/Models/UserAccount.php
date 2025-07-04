@@ -2,22 +2,20 @@
 
 namespace App\Models;
 
-use App\Models\SystemUser;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class UserAccount extends Model
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'useraccount';
 
     protected $primaryKey = 'UserId';
-    
+
     protected $fillable = [
         'UserId',
         'Password',
@@ -38,7 +36,7 @@ class UserAccount extends Model
         'LastLogIn',
         'LastLogOut',
         'LastLogIPAddress',
-        'SystemUser_EmpId'
+        'SystemUser_EmpId',
     ];
 
     public function user_detail(): HasOne

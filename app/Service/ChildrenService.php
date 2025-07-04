@@ -2,13 +2,10 @@
 
 namespace App\Service;
 
-use App\Http\Resources\UserResource;
 use App\Http\Resources\StallOwnerChildResource;
-use App\Http\Resources\StallOwnerAccountResource;
-use App\Interface\Service\LedgerServiceInterface;
-use App\Interface\Service\ChildrenServiceInterface;
-use App\Interface\Repository\LedgerRepositoryInterface;
+use App\Http\Resources\UserResource;
 use App\Interface\Repository\ChildrenRepositoryInterface;
+use App\Interface\Service\ChildrenServiceInterface;
 
 class ChildrenService implements ChildrenServiceInterface
 {
@@ -22,6 +19,7 @@ class ChildrenService implements ChildrenServiceInterface
     public function findMany(object $payload)
     {
         $childrens = $this->childrenRepository->findMany($payload);
+
         return StallOwnerChildResource::collection($childrens);
     }
 

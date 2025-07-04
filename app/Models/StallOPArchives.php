@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StallOPArchives extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'stalloparchives';
 
     protected $primaryKey = 'stallOPId';
@@ -35,10 +35,10 @@ class StallOPArchives extends Model
         'vendorAddress',
         'opTN',
         'subcode',
-        'datearchived'
+        'datearchived',
     ];
 
-    // public function user(): BelongsTo 
+    // public function user(): BelongsTo
     // {
     //     return $this->belongsTo(UserAccount::class, 'SystemUser_EmpId', 'EmpId');
     // }

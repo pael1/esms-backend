@@ -19,6 +19,7 @@ class OpService implements OpServiceInterface
     public function findMany(object $payload)
     {
         $op = $this->opRepository->findMany($payload);
+
         return StallOPResource::collection($op);
     }
 

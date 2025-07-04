@@ -35,7 +35,7 @@ class AwardeeDetailsResource extends JsonResource
             'stallDescription' => $this->stallDescription,
             'stallNoId' => $this->stallNoId,
             'rate_per_month' => number_format($this->rate_per_month, 2),
-            'stallRentalDet' => new StallRentalDetResource($this->whenLoaded('stallRentalDet'))
+            'stallRentalDet' => new StallRentalDetResource($this->whenLoaded('stallRentalDet')),
         ];
     }
 }

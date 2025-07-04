@@ -19,10 +19,10 @@ class Signatory extends Model
         'signatorydesignation',
         'marketOfficeCode',
         'status',
-        'encodedby'
+        'encodedby',
     ];
 
-    // public function user(): BelongsTo 
+    // public function user(): BelongsTo
     // {
     //     return $this->belongsTo(UserAccount::class, 'SystemUser_EmpId', 'EmpId');
     // }

@@ -2,20 +2,14 @@
 
 namespace App\Repository;
 
-use App\Models\User;
-use App\Models\UserAccount;
-use Illuminate\Http\Response;
-use App\Models\StallOwnerChild;
-use App\Models\StallOwnerAccount;
-use Illuminate\Support\Facades\Hash;
-use App\Interface\Service\LedgerServiceInterface;
-use App\Interface\Repository\UserRepositoryInterface;
-use App\Interface\Repository\LedgerRepositoryInterface;
 use App\Interface\Repository\ChildrenRepositoryInterface;
+use App\Models\StallOwnerChild;
+use App\Models\User;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class ChildrenRepository implements ChildrenRepositoryInterface
 {
-
     public function findMany(object $payload)
     {
         return StallOwnerChild::where('ownerId', $payload->ownerId)->paginate(10);

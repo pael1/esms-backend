@@ -20,13 +20,13 @@ class AwardeeListResource extends JsonResource
             'lastname' => $this->lastname,
             'firstname' => $this->firstname,
             'midinit' => $this->midinit,
-            'full_name' => $this->firstname . ' ' . $this->midinit . '. ' . $this->lastname,
+            'full_name' => $this->firstname.' '.$this->midinit.'. '.$this->lastname,
             'civilStatus' => $this->civilStatus,
             'address' => $this->address,
             'spouseLastname' => $this->spouseLastname,
             'spouseFirstname' => $this->spouseFirstname,
             'spouseMidint' => $this->spouseMidint,
-            'spouse_full_name' => $this->spouseFirstname . ' ' . $this->spouseMidint . '. ' . $this->spouseLastname,
+            'spouse_full_name' => $this->spouseFirstname.' '.$this->spouseMidint.'. '.$this->spouseLastname,
             'ownerStatus' => $this->ownerStatus,
             'attachIdPhoto' => $this->attachIdPhoto,
             'dateRegister' => $this->dateRegister,
@@ -69,7 +69,7 @@ class AwardeeListResource extends JsonResource
             'fixRatePerSqm' => $this->fixRatePerSqm,
             'ratePerDay' => $this->ratePerDay,
             'ratePerMonth' => $this->ratePerMonth,
-            'StallAreaExt' => $this->StallAreaExt
+            'StallAreaExt' => $this->StallAreaExt,
         ];
     }
 }

@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'username' => $this->username,
             'email' => $this->email,
             'created_at' => $this->created_at,
-            'user_detail' => new UserDetailResource($this->whenLoaded('user_detail'))
+            'user_detail' => new UserDetailResource($this->whenLoaded('user_detail')),
         ];
     }
 }

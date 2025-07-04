@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Interface\Service\AwardeeServiceInterface;
 use App\Models\Awardee;
 use Illuminate\Http\Request;
-use App\Interface\Service\AwardeeServiceInterface;
 
 class AwardeeController extends Controller
 {
-
     private $awardeeService;
 
     public function __construct(AwardeeServiceInterface $awardeeService)

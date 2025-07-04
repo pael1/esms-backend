@@ -2,23 +2,26 @@
 
 namespace App\Repository;
 
-use App\Models\User;
-use App\Models\UserAccount;
-use Illuminate\Http\Response;
-use App\Models\StallOwnerAccount;
-use Illuminate\Support\Facades\Hash;
-use App\Interface\Service\LedgerServiceInterface;
-use App\Interface\Repository\UserRepositoryInterface;
 use App\Interface\Repository\LedgerRepositoryInterface;
+use App\Models\StallOwnerAccount;
+use App\Models\User;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class LedgerRepository implements LedgerRepositoryInterface
 {
-
     public function findManyLedger(object $payload)
     {
         return StallOwnerAccount::where('ownerId', $payload->ownerId)
-            ->whereNull('ORNum')
+            ->orderBy('stallOwnerAccountId', 'desc')
             ->paginate(10);
+    }
+
+    public function findManyLedgerArrears(object $payload)
+    {
+        return StallOwnerAccount::where('ownerId', $payload->ownerId)
+            ->whereNull('ORNum')
+            ->get();
     }
 
     public function createLedger(object $payload)

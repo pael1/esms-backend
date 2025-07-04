@@ -39,7 +39,7 @@ class StallOP extends Model
         'isinterest',
         'vendorName',
         'vendorAddress',
-        'isarchived'
+        'isarchived',
     ];
 
     // public function stallowner()

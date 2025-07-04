@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
-use App\Http\Resources\UserResource;
 use App\Http\Resources\StallOwnerAccountResource;
-use App\Interface\Service\LedgerServiceInterface;
+use App\Http\Resources\UserResource;
 use App\Interface\Repository\LedgerRepositoryInterface;
+use App\Interface\Service\LedgerServiceInterface;
 
 class LedgerService implements LedgerServiceInterface
 {
@@ -19,6 +19,14 @@ class LedgerService implements LedgerServiceInterface
     public function findManyLedger(object $payload)
     {
         $ledger = $this->ledgerRepository->findManyLedger($payload);
+
+        return StallOwnerAccountResource::collection($ledger);
+    }
+
+    public function findManyLedgerArrears(object $payload)
+    {
+        $ledger = $this->ledgerRepository->findManyLedgerArrears($payload);
+
         return StallOwnerAccountResource::collection($ledger);
     }
 

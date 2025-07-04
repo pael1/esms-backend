@@ -18,19 +18,19 @@ class DatabaseSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i=0; $i < 20; $i++) { 
+        for ($i = 0; $i < 20; $i++) {
 
-             $user = User::create([
+            $user = User::create([
                 // 'uuid' => $faker->uuid(),
                 'username' => $faker->firstName(),
                 'email' => $faker->email(),
-                'password' => Hash::make('password')
+                'password' => Hash::make('password'),
             ]);
 
             UserDetail::create([
-                'user_id'=> $user->id,
+                'user_id' => $user->id,
                 'address' => $faker->address(),
-                'birthday' => $faker->date()
+                'birthday' => $faker->date(),
             ]);
         }
     }

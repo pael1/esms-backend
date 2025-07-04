@@ -25,7 +25,7 @@ class SystemUserResource extends JsonResource
             'Designation' => $this->Designation,
             'DateTimeCreated' => $this->DateTimeCreated,
             'CreatedBy' => $this->CreatedBy,
-            'MarketCode' => $this->MarketCode
+            'MarketCode' => $this->MarketCode,
         ];
     }
 }

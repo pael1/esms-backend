@@ -18,13 +18,13 @@ interface AwardeeServiceInterface
 
     public function findAwardeeById(string $id);
 
-    public function findUserByEmail(string $email);
+    // public function findUserByEmail(string $email);
 
-    public function createUser(object $payload);
+    // public function createUser(object $payload);
 
-    public function updateUser(object $payload, string $id);
+    // public function updateUser(object $payload, string $id);
 
-    public function deleteUser(string $id);
+    // public function deleteUser(string $id);
 
     public function current_billing(object $payload);
 }

@@ -7,7 +7,6 @@ use App\Models\Parameter;
 
 class ParameterRepository implements ParameterRepositoryInterface
 {
-
     public function findMany(object $payload)
     {
         return Parameter::where('fieldId', $payload->fieldId)->get();

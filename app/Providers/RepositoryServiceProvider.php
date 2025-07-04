@@ -2,33 +2,33 @@
 
 namespace App\Providers;
 
-use App\Service\AuthService;
-use App\Service\UserService;
-use App\Service\AwardeeService;
-use App\Repository\UserRepository;
-use App\Repository\AwardeeRepository;
-use Illuminate\Support\ServiceProvider;
-use App\Interface\Service\AuthServiceInterface;
-use App\Interface\Service\UserServiceInterface;
-use App\Interface\Service\AwardeeServiceInterface;
-use App\Interface\Repository\UserRepositoryInterface;
 use App\Interface\Repository\AwardeeRepositoryInterface;
 use App\Interface\Repository\ChildrenRepositoryInterface;
 use App\Interface\Repository\LedgerRepositoryInterface;
 use App\Interface\Repository\OpRepositoryInterface;
 use App\Interface\Repository\ParameterRepositoryInterface;
+use App\Interface\Repository\UserRepositoryInterface;
+use App\Interface\Service\AuthServiceInterface;
+use App\Interface\Service\AwardeeServiceInterface;
 use App\Interface\Service\ChildrenServiceInterface;
 use App\Interface\Service\LedgerServiceInterface;
 use App\Interface\Service\OpServiceInterface;
 use App\Interface\Service\ParameterServiceInterface;
+use App\Interface\Service\UserServiceInterface;
+use App\Repository\AwardeeRepository;
 use App\Repository\ChildrenRepository;
 use App\Repository\LedgerRepository;
 use App\Repository\OpRepository;
 use App\Repository\ParameterRepository;
+use App\Repository\UserRepository;
+use App\Service\AuthService;
+use App\Service\AwardeeService;
 use App\Service\ChildrenService;
 use App\Service\LedgerService;
 use App\Service\OpService;
 use App\Service\ParameterService;
+use App\Service\UserService;
+use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
 {

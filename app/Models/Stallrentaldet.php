@@ -29,7 +29,7 @@ class Stallrentaldet extends Model
         'STALLOWNER_stallOwnerId ',
         'leaseContract ',
         'documentFiles ',
-        'busIDStatus'
+        'busIDStatus',
     ];
 
     public function stallProfile()

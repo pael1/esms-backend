@@ -1,22 +1,22 @@
-<?php 
+<?php
 
 namespace App\Repository;
 
+use App\Interface\Repository\UserRepositoryInterface;
 use App\Models\User;
+use App\Models\UserAccount;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-use App\Interface\Repository\UserRepositoryInterface;
-use App\Models\UserAccount;
 
-class UserRepository implements UserRepositoryInterface {
-
+class UserRepository implements UserRepositoryInterface
+{
     public function findMany(object $payload)
     {
         return UserAccount::with([
-            'user_detail'
+            'user_detail',
         ])
-        ->orderBy('userid', 'asc')
-        ->paginate(10);
+            ->orderBy('userid', 'asc')
+            ->paginate(10);
     }
 
     public function findById(string $UserId)
@@ -26,16 +26,16 @@ class UserRepository implements UserRepositoryInterface {
         // ])->findOrFail($id);
         // dd($UserId);
         return UserAccount::with([
-            'user_detail'
+            'user_detail',
         ])->where('UserId', $UserId)->first();
     }
 
     public function findByUsername(string $username)
     {
         return UserAccount::with([
-        // return User::with([
-            'user_detail'
-        // ])->where('username', $username)->first();
+            // return User::with([
+            'user_detail',
+            // ])->where('username', $username)->first();
         ])->where('userid', $username)->first();
     }
 
@@ -69,8 +69,7 @@ class UserRepository implements UserRepositoryInterface {
         return response()->json([
             //resource/lang/exception.php
             // 'message' => trans('exception.sucess.message')
-            'message' => "successfully deleted"
+            'message' => 'successfully deleted',
         ], Response::HTTP_OK);
     }
-
 }

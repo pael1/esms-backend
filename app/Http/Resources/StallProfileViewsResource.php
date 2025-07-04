@@ -28,7 +28,7 @@ class StallProfileViewsResource extends JsonResource
             'RatePerDay' => $this->RatePerDay,
             'total_amount' => $this->total_amount,
             'extension' => $this->extension,
-            'account_codes' => $this->account_codes
+            'account_codes' => $this->account_codes,
         ];
     }
 }

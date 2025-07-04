@@ -19,7 +19,7 @@ class StallOwnerAccountResource extends JsonResource
             'ownerId' => $this->ownerId,
             'month' => $this->month,
             'year' => $this->year,
-            'date' => $this->month . ' ' . $this->year,
+            'date' => $this->month.' '.$this->year,
             'amountBasic' => $this->amountBasic,
             'amountSurc' => $this->amountSurc,
             'amountInt' => $this->amountInt,

@@ -18,10 +18,10 @@ class ExpirationDate extends Model
         'date',
         'description',
         'ispenaltiesgenerated',
-        'marketcode'
+        'marketcode',
     ];
 
-    // public function user(): BelongsTo 
+    // public function user(): BelongsTo
     // {
     //     return $this->belongsTo(UserAccount::class, 'SystemUser_EmpId', 'EmpId');
     // }

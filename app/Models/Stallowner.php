@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\StallOwnerChild;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Stallowner extends Model
 {
@@ -29,7 +27,7 @@ class Stallowner extends Model
         'ownerStatus',
         'attachIdPhoto',
         'dateRegister',
-        'contactnumber'
+        'contactnumber',
     ];
 
     // public function childrens()
