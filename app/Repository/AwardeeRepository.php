@@ -59,7 +59,7 @@ class AwardeeRepository implements AwardeeRepositoryInterface
     public function find_many_transactions(object $payload)
     {
         return StallOP::where('ownerId', $payload->ownerId)
-            ->orderBy('stallOPId', 'desc')
+            ->orderBy('postDateTime', 'desc')
             ->groupBy('OPRefId')
             ->paginate(10);
     }

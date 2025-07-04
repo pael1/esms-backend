@@ -16,7 +16,7 @@ class StallOP extends Model
     protected $primaryKey = 'stallOPId';
 
     protected $fillable = [
-        'OPRefId ',
+        'OPRefId',
         'opDate',
         'ownerId',
         'stallNo',
