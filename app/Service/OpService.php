@@ -25,7 +25,7 @@ class OpService implements OpServiceInterface
 
     public function findById(string $id)
     {
-        // $op = $this->opRepository->findByFieldId($id);
+        // $op = $this->opRepository->findByFieldIdFieldValue($id);
 
         // return ParameterResource::collection($op); // for multiple data
         // return new ParameterResource($op); //for only 1 data

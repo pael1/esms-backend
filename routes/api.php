@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ChildrenController;
 use App\Http\Controllers\Api\LedgerController;
 use App\Http\Controllers\Api\OpController;
 use App\Http\Controllers\Api\ParameterController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResources([
         'users' => UserController::class,
         'awardees' => AwardeeController::class,
+        'reports' => ReportController::class,
         'ledgers' => LedgerController::class,
         'childrens' => ChildrenController::class,
         'parameters' => ParameterController::class,
@@ -36,6 +38,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/files/{id}', [AwardeeController::class, 'get_files']);
         Route::get('/employees-data/{id}', [AwardeeController::class, 'get_employees_data']);
         Route::get('/generate/current-bill', [AwardeeController::class, 'current_billing']);
+    });
+    Route::prefix('reports')->group(function () {
+        Route::get('/print/masterlist', [ReportController::class, 'masterlist_print']);
     });
 
     Route::prefix('ledgers')->controller(LedgerController::class)->group(function () {

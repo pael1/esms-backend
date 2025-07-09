@@ -217,6 +217,8 @@ class AwardeeService implements AwardeeServiceInterface
                 'valid_until_date' => $this->opRepository->OPDueDate(true),
             ]);
 
+            $pdf->setPaper('A4', 'portrait'); // Options: A4, letter, legal, etc.
+
             // Define filename and path
             $filename = "public/ops/{$payload->ownerId}/{$OPRefId}.pdf";
 

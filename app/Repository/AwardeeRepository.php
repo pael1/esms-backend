@@ -41,14 +41,13 @@ class AwardeeRepository implements AwardeeRepositoryInterface
             ->whereRaw('SUBSTRING(c.sectionCode, 3, 2) = ?', [$payload->section])
             ->where('c.stallNoId', '!=', '')
             ->whereNotNull('c.stallNoId')
-            ->when($payload->first_name, fn($q) => $q->where('a.firstname', $payload->first_name))
-            ->when($payload->last_name, fn($q) => $q->where('a.lastname', $payload->last_name))
+            ->when($payload->name, function ($q) use ($payload) {
+                $fullname = trim(preg_replace('/\s+/', ' ', $payload->name)); // normalize spaces
+                $q->whereRaw("CONCAT(a.firstname, ' ', a.lastname) LIKE ?", ["%{$fullname}%"]);
+            })
             ->orderBy('c.stallNoId', 'asc');
 
-        // Execute Query
-        $results = $query->paginate(10); // Paginated results (10 per page)
-
-        return $results;
+        return $query->paginate(10);
     }
 
     public function find_many_childrens(object $payload)

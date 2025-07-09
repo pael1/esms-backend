@@ -6,7 +6,7 @@ interface ParameterServiceInterface
 {
     public function findMany(object $payload);
 
-    public function findByFieldId(string $id);
+    // public function findByFieldIdFieldValue(string $fieldId, string $fieldValue);
 
     public function create(object $payload);
 

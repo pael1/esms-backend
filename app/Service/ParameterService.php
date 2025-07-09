@@ -22,13 +22,11 @@ class ParameterService implements ParameterServiceInterface
         return ParameterResource::collection($parameter);
     }
 
-    public function findByFieldId(string $id)
-    {
-        // $parameter = $this->parameterRepository->findByFieldId($id);
-
-        // return ParameterResource::collection($parameter); // for multiple data
-        // return new ParameterResource($parameter); //for only 1 data
-    }
+    // public function findByFieldIdFieldValue(string $fieldId, string $fieldValue)
+    // {
+    //     $parameter = $this->parameterRepository->findByFieldIdFieldValue($fieldId, $fieldValue);
+    //     return new ParameterResource($parameter);
+    // }
 
     public function create(object $payload)
     {

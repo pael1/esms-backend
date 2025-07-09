@@ -9,26 +9,19 @@
 
     <style>
         .header {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            justify-content: flex-start;
-            width: 80%;
-            text-align: center;
-            margin-bottom: 20px;
+            position: relative;
+            width: 100%;
             padding-top: 20px;
-        }
-
-        .logo,
-        .text-content {
-            display: inline-block;
-            vertical-align: top;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .logo {
-            width: 40px;
-            padding-right: 20px;
+            position: absolute;
+            left: 0;
+            margin-top: -10px;
+            /* top: 50%;
+            transform: translateY(-50%); */
         }
 
         .text-content {
@@ -83,7 +76,7 @@
         } */
 
         body {
-            font-family: sans-serif;
+            font-family: sans-serif, 'DejaVu Sans';
         }
     </style>
 
@@ -156,7 +149,7 @@
                 <td style="padding: 5px; text-align: right;">
                     <strong style="font-size: 16px;">TOTAL:
                         <span style="font-weight: bold; font-size: 16px;">
-                            {{ number_format($total_amount, 2) }}
+                            ₱{{ number_format($total_amount, 2) }}
                         </span>
                 </td>
             </tr>
@@ -206,27 +199,27 @@
             style="border: 1px solid black; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; display: inline-block; width: 100%; box-sizing: border-box;">
             <div
                 style="display: inline-block; width: 55%; vertical-align: top; padding-right: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                <p style="margin: 0; font-size: 12px; margin-bottom: 2px; padding-top: 4px;">(1) Go to
+                <p style="margin: 0; font-size: 11px; margin-bottom: 2px; padding-top: 4px;">(1) Go to
                     https://www.lbp-eservices.com/egps/portal/index.jsp.
                     Click [Pay Now]</p>
-                <p style="margin: 0; font-size: 12px; padding-top: 4px;">(2) Select merchant "City Government of
+                <p style="margin: 0; font-size: 11px; padding-top: 4px;">(2) Select merchant "City Government of
                     Davao".
                     Click [Continue]
                 </p>
-                <p style="margin: 0; font-size: 12px; padding-top: 4px;">(3) Select transaction type "Miscellaneous
+                <p style="margin: 0; font-size: 11px; padding-top: 4px;">(3) Select transaction type "Miscellaneous
                     Fees"</p>
-                <p style="margin: 0; font-size: 12px; padding-top: 4px;">(4) Select payment gateway option
+                <p style="margin: 0; font-size: 11px; padding-top: 4px;">(4) Select payment gateway option
                     "Landbank/Bancnet/G-Cash"</p>
             </div>
             <div
                 style="display: inline-block; width: 35%; vertical-align: top; overflow: hidden; text-overflow: ellipsis;">
-                <p style="margin: 0; font-size: 12px; padding-top: 4px;">(5) Enter number/OPTN: <span
+                <p style="margin: 0; font-size: 11px; padding-top: 4px;">(5) Enter number/OPTN: <span
                         style="padding-left: 5px;">M{{ str_replace('-', '', $op_number) }}</span>
                 </p>
-                <p style="margin: 0; font-size: 12px; padding-top: 4px;">(6) Enter your contact info (mobile number or
+                <p style="margin: 0; font-size: 11px; padding-top: 4px;">(6) Enter your contact info (mobile number or
                     email)</p>
-                <p style="margin: 0; font-size: 12px; padding-top: 4px;">(7) Enter the generated security code</p>
-                <p style="margin: 0; font-size: 12px; padding-top: 4px;">(8) Click [Submit] and wait for confirmation
+                <p style="margin: 0; font-size: 11px; padding-top: 4px;">(7) Enter the generated security code</p>
+                <p style="margin: 0; font-size: 11px; padding-top: 4px;">(8) Click [Submit] and wait for confirmation
                 </p>
             </div>
         </div>

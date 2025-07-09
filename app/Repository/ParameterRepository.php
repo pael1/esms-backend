@@ -12,9 +12,9 @@ class ParameterRepository implements ParameterRepositoryInterface
         return Parameter::where('fieldId', $payload->fieldId)->get();
     }
 
-    public function findByFieldId(string $id)
+    public function findByFieldIdFieldValue(string $fieldId, string $fieldValue)
     {
-        // return Parameter::where('fieldId', $id);
+        return Parameter::where([ ['fieldId', $fieldId], ['fieldValue', $fieldValue]])->first();;
     }
 
     public function create(object $payload)
