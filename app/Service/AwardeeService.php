@@ -12,7 +12,10 @@ use App\Http\Resources\StallOwnerFilesResource;
 use App\Http\Resources\UserResource;
 use App\Interface\Repository\AwardeeRepositoryInterface;
 use App\Interface\Repository\OpRepositoryInterface;
+use App\Interface\Repository\SignatoryRepositoryInterface;
+use App\Interface\Repository\SyncOpRepositoryInterface;
 use App\Interface\Service\AwardeeServiceInterface;
+use App\Jobs\ProcessUnpaidOP;
 use App\Models\StallOP;
 use App\Pops\Api;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -24,16 +27,18 @@ use Illuminate\Support\Str;
 class AwardeeService implements AwardeeServiceInterface
 {
     private $awardeeRepository;
-
     private $popsApi;
-
     private $opRepository;
+    private $signatoryRepository;
+    private $syncOpRepository;
 
-    public function __construct(AwardeeRepositoryInterface $awardeeRepository, Api $popsApi, OpRepositoryInterface $opRepository)
+    public function __construct(AwardeeRepositoryInterface $awardeeRepository, Api $popsApi, OpRepositoryInterface $opRepository, SignatoryRepositoryInterface $signatoryRepository, SyncOpRepositoryInterface $syncOpRepository)
     {
         $this->awardeeRepository = $awardeeRepository;
         $this->popsApi = $popsApi;
         $this->opRepository = $opRepository;
+        $this->signatoryRepository = $signatoryRepository;
+        $this->syncOpRepository = $syncOpRepository;
     }
 
     public function findManyAwardee(object $payload)
@@ -42,12 +47,6 @@ class AwardeeService implements AwardeeServiceInterface
 
         return AwardeeListResource::collection($awardees);
     }
-
-    // public function findManyLedger(object $payload)
-    // {
-    //     $ledger = $this->awardeeRepository->findManyLedger($payload);
-    //     return StallOwnerAccountResource::collection($ledger);
-    // }
 
     public function find_many_childrens(object $payload)
     {
@@ -93,36 +92,12 @@ class AwardeeService implements AwardeeServiceInterface
             "{$awardee->spouseLastname}";
         $awardee->rate_per_month = $awardee->stallRentalDet->stallProfile->ratePerDay * $days_in_month;
 
+        //process the sync function here
+        $unpaid_op = $this->syncOpRepository->findManyById($ownerID);
+        ProcessUnpaidOP::dispatch($unpaid_op);
+
         return new AwardeeDetailsResource($awardee);
     }
-
-    // public function findUserByEmail(string $email)
-    // {
-
-    //     // $user = $this->awardeeRepository->findByEmail($email);
-
-    //     // // return UserResource::collection($user); // for multiple data
-    //     // return new UserResource($user); //for only 1 data
-    // }
-
-    // public function createUser(object $payload)
-    // {
-    //     // $user = $this->awardeeRepository->create($payload);
-
-    //     // return new UserResource($user);
-    // }
-
-    // public function updateUser(object $payload, string $id)
-    // {
-    //     // $user = $this->awardeeRepository->update($payload, $id);
-
-    //     // return new UserResource($user);
-    // }
-
-    // public function deleteUser(string $id)
-    // {
-    //     // return $this->awardeeRepository->delete($id);
-    // }
 
     public function current_billing(object $payload)
     {
@@ -203,6 +178,7 @@ class AwardeeService implements AwardeeServiceInterface
             }
 
             // $stall_profile->account_codes = $accountCodes;
+            $signatory = $this->signatoryRepository->findById($stallprofile->signatory->signatoryId);
             $pdf = Pdf::loadView('pdf.top', [
                 'owner_name' => $payload->name,
                 'owner_address' => $stallprofile->stallDescription,
@@ -214,6 +190,7 @@ class AwardeeService implements AwardeeServiceInterface
                 'op_sys' => 'ESMS',
                 'post_by' => $payload->postBy,
                 'remarks' => '',
+                'signatory' => $signatory->signatoryFullName,
                 'valid_until_date' => $this->opRepository->OPDueDate(true),
             ]);
 

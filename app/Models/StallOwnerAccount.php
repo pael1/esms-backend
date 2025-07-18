@@ -13,6 +13,8 @@ class StallOwnerAccount extends Model
 
     protected $primaryKey = 'stallOwnerAccountId';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'stallOwnerAccountId',
         'ownerId',

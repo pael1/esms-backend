@@ -44,6 +44,13 @@ class Api
         return $response;
     }
 
+    public function checkORNumber($or_number)
+    {
+        $response = Http::get("{$this->apiEndpoint}/receipts/{$or_number}");
+
+        return $response;
+    }
+
     public function createPayment(object $payload)
     {
         $items = $payload->items;

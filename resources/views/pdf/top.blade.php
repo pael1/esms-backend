@@ -171,20 +171,23 @@
                 </td>
             </tr>
         </table> --}}
-        <div class="content">
-            <div class="text">
-                <p>Assessed by: {{ ucwords(strtolower($post_by)) }}</p>
-                <p>Prepared by: {{ ucwords(strtolower($post_by)) }}</p>
+        <table width="100%" style="font-size: 13px; margin-top: 20px;">
+            <tr valign="top">
+                <!-- Left side -->
+                <td width="50%">
+                <p><strong>Assessed by:</strong> {{ ucwords(strtolower($post_by)) }}</p>
+                <p><strong>Prepared by:</strong> {{ ucwords(strtolower($post_by)) }}</p>
                 <br>
-                <p>Note: Please use the OPTN when paying online</p>
-            </div>
-            <div class="text2">
-                <div style="padding-left: 90px;">
-                    <p>Noted by: {{ ucwords(strtolower($post_by)) }}</p>
-                    <p>Printed by: {{ ucwords(strtolower($post_by)) }}</p>
-                </div>
-            </div>
-        </div>
+                <p><em>Note:</em> Please use the OPTN when paying online.</p>
+                </td>
+
+                <!-- Right side -->
+                <td width="50%" style="padding-left: 40px;">
+                <p><strong>Noted by:</strong> {{ ucwords(strtolower($signatory)) }}</p>
+                <p><strong>Printed by:</strong> {{ ucwords(strtolower($post_by)) }}</p>
+                </td>
+            </tr>
+        </table>
         <div
             style="border: 1px solid black; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; display: inline-block; width: 100%; box-sizing: border-box; border-bottom: 0px;">
             <p style="margin: 0; font-size: 12px;">Steps when paying thru internet with <span style="font-weight: 600;">

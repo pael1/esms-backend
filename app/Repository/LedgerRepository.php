@@ -57,4 +57,9 @@ class LedgerRepository implements LedgerRepositoryInterface
         //     'message' => "successfully deleted"
         // ], Response::HTTP_OK);
     }
+
+    public function updateSync(array $payload)
+    {
+        StallOwnerAccount::whereIn('stallOwnerAccountId', $payload['months'])->update(['is_sync' => 1]);
+    }
 }

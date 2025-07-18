@@ -13,4 +13,7 @@ interface LedgerRepositoryInterface
     public function updateLedger(object $payload, string $id);
 
     public function deleteLedger(string $id);
+
+    public function updateSync(array $payload);
+
 }

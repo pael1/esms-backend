@@ -7,8 +7,8 @@ use App\Http\Controllers\Api\LedgerController;
 use App\Http\Controllers\Api\OpController;
 use App\Http\Controllers\Api\ParameterController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\SyncOpController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -29,10 +29,11 @@ Route::middleware('auth:sanctum')->group(function () {
         'childrens' => ChildrenController::class,
         'parameters' => ParameterController::class,
         'ops' => OpController::class,
+        'sync' => SyncOpController::class,
     ]);
 
     Route::prefix('awardees')->group(function () {
-        Route::get('/ledger/test', [AwardeeController::class, 'get_ledger']);
+        // Route::get('/ledger/test', [AwardeeController::class, 'get_ledger']);
         Route::get('/childrens/{id}', [AwardeeController::class, 'get_childrens']);
         Route::get('/transactions/{id}', [AwardeeController::class, 'get_transactions']);
         Route::get('/files/{id}', [AwardeeController::class, 'get_files']);
@@ -45,6 +46,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('ledgers')->controller(LedgerController::class)->group(function () {
         Route::get('data/arrears', 'arrears');
+    });
+
+    //sync
+    Route::prefix('sync')->controller(SyncOpController::class)->group(function () {
+        Route::get('data/arrears', 'arrearsMonth');
     });
 });
 
