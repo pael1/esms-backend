@@ -12,6 +12,8 @@ interface SyncOpRepositoryInterface
 
     public function findById(string $id);
 
+    public function updateById(string $id);
+    
     public function create(array $payload);
 
     public function update(object $payload, string $id);

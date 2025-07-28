@@ -94,7 +94,9 @@ class AwardeeService implements AwardeeServiceInterface
 
         //process the sync function here
         $unpaid_op = $this->syncOpRepository->findManyById($ownerID);
-        ProcessUnpaidOP::dispatch($unpaid_op);
+        if ($unpaid_op->isNotEmpty()) {
+            ProcessUnpaidOP::dispatch($unpaid_op, $awardee);
+        }
 
         return new AwardeeDetailsResource($awardee);
     }
@@ -141,6 +143,7 @@ class AwardeeService implements AwardeeServiceInterface
             //account codes to be paid
             $itemsPaid = [];
             $payload->duedate = $this->opRepository->OPDueDate();
+            $payload->signatoryid = $stallprofile->signatory->signatoryId;
             foreach ($items as $item) {
                 // $accountCodes = $this->awardeeRepository->accountCodes($officeCode, $has_extension, $item['value'], $stallprofile->sectionCode);
                 $accountCodes = $this->opRepository->accountCodes($officeCode, $has_extension, $item['value'], $stallprofile->sectionCode);
@@ -160,7 +163,6 @@ class AwardeeService implements AwardeeServiceInterface
                     $payload->amount = $account->amount;
                     $payload->OPRefId = $OPRefId;
                     $payload->purpose = $item['label'];
-                    // $this->awardeeRepository->saveOP($payload);
                     $this->opRepository->saveOP($payload);
 
                     $itemsPaid[] = [

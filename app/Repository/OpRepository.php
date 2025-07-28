@@ -124,7 +124,7 @@ class OpRepository implements OpRepositoryInterface
 
     public function saveOP(object $payload)
     {
-        $stallprofile = json_decode($payload->stallprofile);
+        // $stallprofile = json_decode($payload->stallprofile);
 
         $op = new StallOP();
         $op->OPRefId = $payload->OPRefId;
@@ -137,10 +137,13 @@ class OpRepository implements OpRepositoryInterface
         $op->amountBasic = $payload->amount;
         $op->postDateTime = Carbon::now();
         $op->postBy = $payload->postBy;
-        $op->signatoryid = $stallprofile->signatory->signatoryId;
+        $op->signatoryid = $payload->signatoryid;
         $op->purpose = $payload->purpose;
         $op->opTN = 'M' . str_replace('-', '', $payload->OPRefId);
         $op->fk = 0;
+        //null if no data pass on payload
+        $op->ORNum = $payload->ORNum ?? null;
+        $op->ORDate = $payload->ORDate ?? null;
         $op->save();
 
         return $op->fresh();

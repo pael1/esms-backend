@@ -37,13 +37,13 @@ class LedgerRepository implements LedgerRepositoryInterface
 
     public function updateLedger(object $payload, string $id)
     {
-        // $user = User::findOrFail($id);
-        // $user->username = $payload->username;
-        // $user->email = $payload->email;
-        // $user->password = Hash::make($payload->password);
-        // $user->save();
+        // $ledger = StallOwnerAccount::where('stallOwnerAccountId', $id);
+        // $ledger->ORNum = $payload->ORNum;
+        // $ledger->ORDate = $payload->ORDate;
+        // $ledger->OPRefId = $payload->oprefId;
+        // $ledger->save();
 
-        // return $user->fresh();
+        // return $ledger->fresh();
     }
 
     public function deleteLedger(string $id)
@@ -58,8 +58,20 @@ class LedgerRepository implements LedgerRepositoryInterface
         // ], Response::HTTP_OK);
     }
 
+    // SYNC FUNCTIONS
     public function updateSync(array $payload)
     {
         StallOwnerAccount::whereIn('stallOwnerAccountId', $payload['months'])->update(['is_sync' => 1]);
     }
+
+    public function updateLedgerSync(array $payload)
+    {
+        StallOwnerAccount::whereIn('stallOwnerAccountId', $payload['months'])
+            ->update([
+                'ORNum'   => $payload['ornum'],
+                'ORDate'  => $payload['ordate'],
+                'OPRefId' => $payload['oprefId']
+        ]);
+    }
+    
 }
