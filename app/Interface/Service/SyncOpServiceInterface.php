@@ -12,7 +12,7 @@ interface SyncOpServiceInterface
 
     public function findById(string $id);
 
-    public function create(array $payload);
+    public function create(object $payload);
 
     public function update(object $payload, string $id);
 

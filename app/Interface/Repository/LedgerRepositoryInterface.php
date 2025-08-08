@@ -8,13 +8,13 @@ interface LedgerRepositoryInterface
 
     public function findManyLedgerArrears(object $payload);
 
-    public function createLedger(object $payload);
+    public function createLedger(object $payload, array $item);
 
     public function updateLedger(object $payload, string $id);
 
     public function deleteLedger(string $id);
 
-    public function updateSync(array $payload);
+    public function updateSync(object $payload);
     
     public function updateLedgerSync(array $payload);
 

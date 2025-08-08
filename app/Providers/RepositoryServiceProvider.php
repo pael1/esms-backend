@@ -2,43 +2,47 @@
 
 namespace App\Providers;
 
-use App\Interface\Repository\AwardeeRepositoryInterface;
-use App\Interface\Repository\ChildrenRepositoryInterface;
-use App\Interface\Repository\LedgerRepositoryInterface;
-use App\Interface\Repository\OpRepositoryInterface;
-use App\Interface\Repository\ParameterRepositoryInterface;
-use App\Interface\Repository\ReportRepositoryInterface;
-use App\Interface\Repository\SignatoryRepositoryInterface;
-use App\Interface\Repository\SyncOpRepositoryInterface;
-use App\Interface\Repository\UserRepositoryInterface;
-use App\Interface\Service\AuthServiceInterface;
-use App\Interface\Service\AwardeeServiceInterface;
-use App\Interface\Service\ChildrenServiceInterface;
-use App\Interface\Service\LedgerServiceInterface;
-use App\Interface\Service\OpServiceInterface;
-use App\Interface\Service\ParameterServiceInterface;
-use App\Interface\Service\ReportServiceInterface;
-use App\Interface\Service\SyncOpServiceInterface;
-use App\Interface\Service\UserServiceInterface;
-use App\Repository\AwardeeRepository;
-use App\Repository\ChildrenRepository;
-use App\Repository\LedgerRepository;
-use App\Repository\OpRepository;
-use App\Repository\ParameterRepository;
-use App\Repository\ReportRepository;
-use App\Repository\SignatoryRepository;
-use App\Repository\SyncOpRepository;
-use App\Repository\UserRepository;
-use App\Service\AuthService;
-use App\Service\AwardeeService;
-use App\Service\ChildrenService;
-use App\Service\LedgerService;
 use App\Service\OpService;
-use App\Service\ParameterService;
+use App\Service\AuthService;
+use App\Service\UserService;
+use App\Service\StallService;
+use App\Service\LedgerService;
 use App\Service\ReportService;
 use App\Service\SyncOpService;
-use App\Service\UserService;
+use App\Service\AwardeeService;
+use App\Repository\OpRepository;
+use App\Service\ChildrenService;
+use App\Service\ParameterService;
+use App\Repository\UserRepository;
+use App\Repository\StallRepository;
+use App\Repository\LedgerRepository;
+use App\Repository\ReportRepository;
+use App\Repository\SyncOpRepository;
+use App\Repository\AwardeeRepository;
+use App\Repository\ChildrenRepository;
+use App\Repository\ParameterRepository;
+use App\Repository\SignatoryRepository;
 use Illuminate\Support\ServiceProvider;
+use App\Interface\Service\OpServiceInterface;
+use App\Interface\Service\AuthServiceInterface;
+use App\Interface\Service\UserServiceInterface;
+use App\Interface\Service\StallServiceInterface;
+use App\Interface\Service\LedgerServiceInterface;
+use App\Interface\Service\ReportServiceInterface;
+use App\Interface\Service\SyncOpServiceInterface;
+use App\Interface\Service\AwardeeServiceInterface;
+use App\Interface\Repository\OpRepositoryInterface;
+use App\Interface\Service\ChildrenServiceInterface;
+use App\Interface\Service\ParameterServiceInterface;
+use App\Interface\Repository\UserRepositoryInterface;
+use App\Interface\Repository\StallRepositoryInterface;
+use App\Interface\Repository\LedgerRepositoryInterface;
+use App\Interface\Repository\ReportRepositoryInterface;
+use App\Interface\Repository\SyncOpRepositoryInterface;
+use App\Interface\Repository\AwardeeRepositoryInterface;
+use App\Interface\Repository\ChildrenRepositoryInterface;
+use App\Interface\Repository\ParameterRepositoryInterface;
+use App\Interface\Repository\SignatoryRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -57,6 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ReportRepositoryInterface::class, ReportRepository::class);
         $this->app->bind(SignatoryRepositoryInterface::class, SignatoryRepository::class);
         $this->app->bind(SyncOpRepositoryInterface::class, SyncOpRepository::class);
+        $this->app->bind(StallRepositoryInterface::class, StallRepository::class);
 
         //services
         $this->app->bind(UserServiceInterface::class, UserService::class);
@@ -68,6 +73,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(OpServiceInterface::class, OpService::class);
         $this->app->bind(ReportServiceInterface::class, ReportService::class);
         $this->app->bind(SyncOpServiceInterface::class, SyncOpService::class);
+        $this->app->bind(StallServiceInterface::class, StallService::class);
     }
 
     /**

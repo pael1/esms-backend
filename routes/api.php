@@ -1,19 +1,26 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\AwardeeController;
-use App\Http\Controllers\Api\ChildrenController;
-use App\Http\Controllers\Api\LedgerController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OpController;
-use App\Http\Controllers\Api\ParameterController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\StallController;
+use App\Http\Controllers\Api\LedgerController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SyncOpController;
-use App\Http\Controllers\Api\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AwardeeController;
+use App\Http\Controllers\Api\WebhookController;
+use App\Http\Controllers\Api\ChildrenController;
+use App\Http\Controllers\Api\ParameterController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
+
+//webhook
+Route::post('/webhook/receiver', [WebhookController::class, 'receiver']);
+Route::post('/webhook/subscribe', [WebhookController::class, 'subscribe']);
+
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -30,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'parameters' => ParameterController::class,
         'ops' => OpController::class,
         'sync' => SyncOpController::class,
+        'stalls' => StallController::class,
     ]);
 
     Route::prefix('awardees')->group(function () {

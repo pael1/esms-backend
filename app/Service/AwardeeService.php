@@ -11,6 +11,7 @@ use App\Http\Resources\StallOwnerEmpResource;
 use App\Http\Resources\StallOwnerFilesResource;
 use App\Http\Resources\UserResource;
 use App\Interface\Repository\AwardeeRepositoryInterface;
+use App\Interface\Repository\LedgerRepositoryInterface;
 use App\Interface\Repository\OpRepositoryInterface;
 use App\Interface\Repository\SignatoryRepositoryInterface;
 use App\Interface\Repository\SyncOpRepositoryInterface;
@@ -31,14 +32,16 @@ class AwardeeService implements AwardeeServiceInterface
     private $opRepository;
     private $signatoryRepository;
     private $syncOpRepository;
+    private $LedgerRepository;
 
-    public function __construct(AwardeeRepositoryInterface $awardeeRepository, Api $popsApi, OpRepositoryInterface $opRepository, SignatoryRepositoryInterface $signatoryRepository, SyncOpRepositoryInterface $syncOpRepository)
+    public function __construct(AwardeeRepositoryInterface $awardeeRepository, Api $popsApi, OpRepositoryInterface $opRepository, SignatoryRepositoryInterface $signatoryRepository, SyncOpRepositoryInterface $syncOpRepository, LedgerRepositoryInterface $LedgerRepository)
     {
         $this->awardeeRepository = $awardeeRepository;
         $this->popsApi = $popsApi;
         $this->opRepository = $opRepository;
         $this->signatoryRepository = $signatoryRepository;
         $this->syncOpRepository = $syncOpRepository;
+        $this->LedgerRepository = $LedgerRepository;
     }
 
     public function findManyAwardee(object $payload)
@@ -98,6 +101,11 @@ class AwardeeService implements AwardeeServiceInterface
             ProcessUnpaidOP::dispatch($unpaid_op, $awardee);
         }
 
+        //testing for roles and permissions using spatie
+        // $user = UserAccount::where('SystemUser_EmpId', 12345)->first();
+        // $permissions = $user->getAllPermissions()->pluck('name');
+        // logger($permissions);
+
         return new AwardeeDetailsResource($awardee);
     }
 
@@ -144,6 +152,45 @@ class AwardeeService implements AwardeeServiceInterface
             $itemsPaid = [];
             $payload->duedate = $this->opRepository->OPDueDate();
             $payload->signatoryid = $stallprofile->signatory->signatoryId;
+
+            // foreach ($items as $item) {
+            //     // Create the item for the basic amount
+            //     $newItems[] = [
+            //         'value' => $item['value'],
+            //         'label' => $item['label'],
+            //         'amountBasic' => $item['amountBasic'],
+            //         'fee' => 'rental',
+            //     ];
+
+            //     // Create the item for the interest
+            //     $newItems[] = [
+            //         'value' => $item['value'],
+            //         'label' => $item['label'],
+            //         'amountBasic' => $item['interest'],
+            //         'fee' => 'interest',
+            //     ];
+
+            //     // Create the item for the surcharge
+            //     $newItems[] = [
+            //         'value' => $item['value'],
+            //         'label' => $item['label'],
+            //         'amountBasic' => $item['surcharge'],
+            //         'fee' => 'surcharge',
+            //     ];
+
+            //     // Create the item for the extension
+            //     $newItems[] = [
+            //         'value' => $item['value'],
+            //         'label' => $item['label'],
+            //         'amountBasic' => $item['extensionRate'],
+            //         'fee' => 'extension',
+            //     ];
+            // }
+
+            // foreach ($newItems as $newItem) {
+            //     logger($newItem);
+            // }
+
             foreach ($items as $item) {
                 // $accountCodes = $this->awardeeRepository->accountCodes($officeCode, $has_extension, $item['value'], $stallprofile->sectionCode);
                 $accountCodes = $this->opRepository->accountCodes($officeCode, $has_extension, $item['value'], $stallprofile->sectionCode);
@@ -164,6 +211,7 @@ class AwardeeService implements AwardeeServiceInterface
                     $payload->OPRefId = $OPRefId;
                     $payload->purpose = $item['label'];
                     $this->opRepository->saveOP($payload);
+                    $this->LedgerRepository->createLedger($payload, $item);
 
                     $itemsPaid[] = [
                         'accountcode' => $account->accountcode,

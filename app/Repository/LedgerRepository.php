@@ -24,15 +24,30 @@ class LedgerRepository implements LedgerRepositoryInterface
             ->get();
     }
 
-    public function createLedger(object $payload)
+    public function createLedger(object $payload, array $item)
     {
-        // $user = new User();
-        // $user->username = $payload->username;
-        // $user->email = $payload->email;
-        // $user->password = Hash::make($payload->password);
-        // $user->save();
+        $dateParts = explode(' ', $item['label']);
+        $isLedgerExists = StallOwnerAccount::where('ownerId', $payload->ownerId)
+                    ->where('month', $dateParts[0])
+                    ->where('year', $dateParts[1])
+                    ->first();
 
-        // return $user->fresh();
+        $ledger = new StallOwnerAccount();
+        if($item['value'] === 'current' && !$isLedgerExists) {
+            try {
+                $ledger->ownerId = $payload->ownerId;
+                $ledger->month = $dateParts[0];
+                $ledger->year = $dateParts[1];
+                $ledger->amountBasic = $item['amountBasic'];
+                $ledger->OPRefId = $payload->OPRefId;
+                $ledger->generatedBy = $payload->postBy;
+                $ledger->save();
+            } catch (\Exception $e) {
+                logger("Failed to create ledger: " . $e->getMessage());
+                return $ledger;
+            }
+        }
+        return $ledger;
     }
 
     public function updateLedger(object $payload, string $id)
@@ -59,7 +74,7 @@ class LedgerRepository implements LedgerRepositoryInterface
     }
 
     // SYNC FUNCTIONS
-    public function updateSync(array $payload)
+    public function updateSync(object $payload)
     {
         StallOwnerAccount::whereIn('stallOwnerAccountId', $payload['months'])->update(['is_sync' => 1]);
     }

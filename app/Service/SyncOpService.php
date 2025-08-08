@@ -2,13 +2,15 @@
 
 namespace App\Service;
 
+use Illuminate\Http\Response;
+use App\Models\StallOwnerAccount;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\SyncOpResource;
 use App\Http\Resources\StallOPResource;
 use App\Http\Resources\StallOwnerAccountResource;
-use App\Http\Resources\SyncOpResource;
+use App\Interface\Service\SyncOpServiceInterface;
 use App\Interface\Repository\LedgerRepositoryInterface;
 use App\Interface\Repository\SyncOpRepositoryInterface;
-use App\Interface\Service\SyncOpServiceInterface;
-use App\Models\StallOwnerAccount;
 
 class SyncOpService implements SyncOpServiceInterface
 {
@@ -48,14 +50,22 @@ class SyncOpService implements SyncOpServiceInterface
         // return new ParameterResource($op); //for only 1 data
     }
 
-    public function create(array $payload)
+    public function create(object $payload)
     {
-        $data = $this->syncOpRepository->create($payload);
+        try {
+            return DB::transaction(function () use ($payload) {
+                $data = $this->syncOpRepository->create($payload);
+                $this->ledgerRepository->updateSync($payload);
+                
+                return SyncOpResource::make($data);
+            });
 
-        //update the stallowner account for the sync operation
-        $this->ledgerRepository->updateSync($payload);
-
-        return new SyncOpResource($data);
+        } catch (\Throwable $e) {
+            report($e);
+            return response()->json([
+                'message' => trans('exception.sync_create_error.message'),
+            ], 500);
+        }
     }
 
     public function update(object $payload, string $id)

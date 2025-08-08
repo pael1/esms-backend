@@ -29,6 +29,7 @@ class StallOwnerAccount extends Model
         'generatedBy',
         'isadded',
         'expdate',
+        'is_sync',
     ];
 
     // public function ledger()

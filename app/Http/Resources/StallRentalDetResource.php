@@ -32,7 +32,7 @@ class StallRentalDetResource extends JsonResource
             'documentFiles' => $this->documentFiles,
             'busIDStatus' => $this->busIDStatus,
             'stallProfile' => new StallProfileResource($this->whenLoaded('stallProfile')),
-            'stallProfileViews' => new StallProfileViewsResource($this->whenLoaded('stallProfileViews')),
+            // 'stallProfileViews' => new StallProfileViewsResource($this->whenLoaded('stallProfileViews')),
         ];
     }
 }

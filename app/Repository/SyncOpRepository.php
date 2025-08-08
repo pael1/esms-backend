@@ -41,11 +41,19 @@ class SyncOpRepository implements SyncOpRepositoryInterface
             ->update(['is_processed' => 1]);
     }
 
-    public function create(array $payload)
+    public function create(object $payload)
     {
-        $syncOp = SyncOp::create($payload);
+        // $syncOp = SyncOp::create($payload);
+        // logger([$payload]);
+        $syncOp = new SyncOp();
+        $syncOp->ornumber = $payload->ornumber;
+        $syncOp->ownerId = $payload->ownerid;
+        $syncOp->months = $payload->months;
+        $syncOp->save();
 
         return $syncOp->fresh();
+
+        // return $syncOp->fresh();
     }
 
     public function update(object $payload, string $id)

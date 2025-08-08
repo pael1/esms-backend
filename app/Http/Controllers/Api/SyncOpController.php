@@ -46,7 +46,7 @@ class SyncOpController extends Controller
     // Store a new SyncOp record
     public function store(StoreSyncOpRequest $request)
     {
-        return $this->syncService->create($request->validated());
+        return $this->syncService->create($request);
     }
 
     // Update an existing SyncOp record

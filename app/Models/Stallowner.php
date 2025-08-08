@@ -30,21 +30,6 @@ class Stallowner extends Model
         'contactnumber',
     ];
 
-    // public function childrens()
-    // {
-    //     return $this->hasMany(StallOwnerChild::class, 'STALLOWNER_stallOwnerId', 'stallOwnerId');
-    // }
-
-    // public function ledger()
-    // {
-    //     return $this->hasMany(StallOwnerAccount::class, 'ownerId', 'ownerId');
-    // }
-
-    // public function transactions()
-    // {
-    //     return $this->hasMany(StallOP::class, 'ownerId', 'ownerId');
-    // }
-
     public function stallRentalDet()
     {
         return $this->hasOne(Stallrentaldet::class, 'ownerId', 'ownerId');

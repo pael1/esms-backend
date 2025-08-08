@@ -154,6 +154,55 @@ class OpRepository implements OpRepositoryInterface
         $accountCodes = $this->popsApi->accountCodes('esms');
         $matchedCode = null;
         $response = json_decode($accountCodes);
+        
+        //$value = current or previous
+        $value = ($value == 'current') ? 'current' : 'previous';
+        //get section using sectioncode
+        $sectionCode = substr($sectionCode, 2, 2); // start at position 4, get 4 characters
+        $section = Parameter::where(['fieldId' => 'SECTIONCODE', 'fieldValue' => $sectionCode])->first();
+        $map = [
+            'COLD STORAGE' => 'ICE STORAGE',
+            'VEGETABLE AND FRUIT' => 'FRUIT&VEG',
+            'VARIETY OR GROCERIES' => 'VARIETY',
+            'RICE, CORN AND OTHER CEREALS' => 'RICE & CORN',
+            'FOOD COURT/EATERY' => 'EATERY',
+            'LIVESTOCK' => 'LIVE CHICKEN',
+        ];
+
+        $sectionCodeDes = $map[$section->fieldDescription] ?? $section->fieldDescription;
+
+        foreach ($response->data as $item) {
+            $parts = explode('-', $item->accountcode);
+            if (isset($parts[1], $parts[2])) {
+                $office_id = $parts[1] . '-' . $parts[2];
+                $prevOrCurrent = Str::contains(Str::lower($item->description), $value);
+                $sectionCode = Str::contains(Str::lower($item->description), Str::lower($sectionCodeDes));
+                $extension = Str::contains(Str::lower($item->accountcode), $office_id . '-39');
+                $fines = Str::contains(Str::lower($item->accountcode), $office_id . '-49');
+
+                //get the accountcodes and desc
+                if ($office_id === $officeCode && $prevOrCurrent && $sectionCode) {
+                    $matchedCode[] = $item;
+                }
+                //get extension details
+                if ($office_id === $officeCode && $has_extension && $extension) {
+                    $matchedCode[] = $item;
+                }
+                //get fines details
+                if ($office_id === $officeCode && $value === 'previous' && $fines) {
+                    $matchedCode[] = $item;
+                }
+            }
+        }
+
+        return $matchedCode;
+    }
+
+    public function accountCodes1(string $officeCode, bool $has_extension, string $value, string $sectionCode)
+    {
+        $accountCodes = $this->popsApi->accountCodes('esms');
+        $matchedCode = null;
+        $response = json_decode($accountCodes);
 
         //$value = current or previous
         $value = ($value == 'current') ? 'current' : 'previous';
@@ -178,6 +227,7 @@ class OpRepository implements OpRepositoryInterface
                 $prevOrCurrent = Str::contains(Str::lower($item->description), $value);
                 $sectionCode = Str::contains(Str::lower($item->description), Str::lower($sectionCodeDes));
                 $extension = Str::contains(Str::lower($item->accountcode), $office_id . '-39');
+                $fines = Str::contains(Str::lower($item->accountcode), $office_id . '-49');
 
                 //get the accountcodes and desc
                 if ($office_id === $officeCode && $prevOrCurrent && $sectionCode) {
@@ -185,6 +235,10 @@ class OpRepository implements OpRepositoryInterface
                 }
                 //get extension details
                 if ($office_id === $officeCode && $has_extension && $extension) {
+                    $matchedCode[] = $item;
+                }
+                //get fines details
+                if ($office_id === $officeCode && $value === 'previous' && $fines) {
                     $matchedCode[] = $item;
                 }
             }

@@ -14,7 +14,7 @@ class ParameterRepository implements ParameterRepositoryInterface
 
     public function findByFieldIdFieldValue(string $fieldId, string $fieldValue)
     {
-        return Parameter::where([ ['fieldId', $fieldId], ['fieldValue', $fieldValue]])->first();;
+        return Parameter::where([ ['fieldId', $fieldId], ['fieldValue', $fieldValue]])->first();
     }
 
     public function create(object $payload)
