@@ -30,7 +30,7 @@ class StallRepository implements StallRepositoryInterface
         // return $query->paginate(10);
         $query = Stallprofile::with(['stallRental', 'stallRental.stallOwner'])
                 ->filter($payload->all())
-                ->orderBy('stallNoId', 'asc');
+                ->orderBy('stallNoId', 'desc');
 
         return $query->paginate(10);
     }
@@ -47,10 +47,10 @@ class StallRepository implements StallRepositoryInterface
         $sp->stallNo = $payload->stallNo;
         $sp->CFSI = $payload->cfsi;
         $sp->stallClass = $payload->class;
-        // $sp->months = $payload->extension;
+        $sp->stallDescription = $payload->stallDescription;
         $sp->marketCode = $payload->market;
-        $sp->sectionCode = $payload->section;
-        // $sp->months = $payload->stall_id;
+        $sp->sectionCode = $payload->sectionCode;
+        $sp->stallNoId = $payload->stallNoId;
         // $sp->months = $payload->sub_section;
         $sp->stallType = $payload->type;
         $sp->save();

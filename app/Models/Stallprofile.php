@@ -19,7 +19,7 @@ class Stallprofile extends Model
 
     protected $table = 'stallprofile';
 
-    protected $primaryKey = 'stallProfileId ';
+    protected $primaryKey = 'stallProfileId';
 
     protected $fillable = [
         'stallProfileId',

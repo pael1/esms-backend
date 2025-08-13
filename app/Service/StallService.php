@@ -5,14 +5,17 @@ namespace App\Service;
 use App\Http\Resources\StallListResource;
 use App\Interface\Service\StallServiceInterface;
 use App\Interface\Repository\StallRepositoryInterface;
+use App\Interface\Repository\ParameterRepositoryInterface;
 
 class StallService implements StallServiceInterface
 {
     private $stallRepository;
+    private $parameterRepository;
 
-    public function __construct(StallRepositoryInterface $stallRepository)
+    public function __construct(StallRepositoryInterface $stallRepository, ParameterRepositoryInterface $parameterRepository)
     {
         $this->stallRepository = $stallRepository;
+        $this->parameterRepository = $parameterRepository;
     }
     public function findManyStalls(object $payload)
     {
@@ -26,11 +29,28 @@ class StallService implements StallServiceInterface
     }
     public function createStall(object $payload)
     {
-        // $payload->building;
-        // $payload->extension;
-        // $payload->stall_id;
-        // $payload->sub_section;
-        $payload->merge(['stallNo' => '001110011']);
+
+        // get descriptions
+        $building = $this->parameterRepository->findByFieldIdFieldValue('STRUCTCODE', $payload->building);
+        $section = $this->parameterRepository->findByFieldIdFieldValue('SECTIONCODE', $payload->section);
+        $sectionSub = ($payload->sub_section) ? $this->parameterRepository->findByFieldIdFieldValue('SERIESCODE', $payload->sub_section) : null;
+        $type = $this->parameterRepository->findByFieldIdFieldValue('STALLTYPE', $payload->type);
+        $market = $this->parameterRepository->findByFieldIdFieldValue('MARKETCODE', $payload->market);
+        $cfsi = $this->parameterRepository->findByFieldIdFieldValue('CFSI', $payload->cfsi);
+
+        $hasSubSection = ($payload->sub_section) ? ' ('.$sectionSub.') ' : ' ';
+        $marketDescription = $building->fieldDescription.', '.$section->fieldDescription.' '.$type->fieldDescription.''.$hasSubSection.''.$market->fieldDescription;
+        
+        $sectionFormat = ($payload->sub_section) ? $payload->sub_section : $payload->section . '00';
+        $stallNoFormat = $payload->market.''.$sectionFormat.''.$payload->stall_id . '' . $payload->extension;
+        
+        $payload->stallNo = $stallNoFormat;
+        $payload->stallDescription = $marketDescription;
+        $payload->sectionCode = $payload->building.''.$sectionFormat;
+        // $payload->stallStatus = 'available';
+        $payload->stallNoId = $payload->stall_id . '' . $payload->extension;
+        $payload->cfsi = $cfsi->fieldDescription;
+        $payload->type = $type->fieldDescription;
 
         return $this->stallRepository->createStall($payload);
     }
