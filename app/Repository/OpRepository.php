@@ -93,7 +93,7 @@ class OpRepository implements OpRepositoryInterface
     }
 
     //check if the OP is already exists
-    public function checkOP($payload)
+    public function checkOP($payload, $payload_items)
     {
         $op = StallOP::where('ownerId', $payload->ownerId)
             ->latest('stallOPId')
@@ -101,8 +101,9 @@ class OpRepository implements OpRepositoryInterface
             ->first();
 
         $op->oprefid = $op->OPRefId;
-
-        $items = collect(json_decode($payload->items, true))->map(function ($item) {
+        
+        // $items = collect(json_decode($payload_items, true))->map(function ($item) {
+        $items = collect($payload_items)->map(function ($item) {
             return [
                 'purpose' => trim($item['label']),
             ];
@@ -147,6 +148,21 @@ class OpRepository implements OpRepositoryInterface
         $op->save();
 
         return $op->fresh();
+    }
+
+    public function getAccountCode(string $officeCode, string $description, string $description1)
+    {
+        $apiResponse = $this->popsApi->accountCodes('esms');
+        $response = json_decode($apiResponse, true);
+
+        // Filter dynamically based on params
+         $result = collect($response['data'])->first(function ($item) use ($officeCode, $description, $description1) {
+            return Str::contains($item['accountcode'], $officeCode) &&
+                Str::contains(Str::lower($item['description']), Str::lower($description)) &&
+                Str::contains(Str::lower($item['description']), Str::lower($description1));
+        });
+
+        return $result;
     }
 
     public function accountCodes(string $officeCode, bool $has_extension, string $value, string $sectionCode)

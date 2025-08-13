@@ -32,6 +32,7 @@ class StallRentalDetResource extends JsonResource
             'documentFiles' => $this->documentFiles,
             'busIDStatus' => $this->busIDStatus,
             'stallProfile' => new StallProfileResource($this->whenLoaded('stallProfile')),
+            'stallOwner' => StallOwnerResource::make($this->whenLoaded('stallOwner')),
             // 'stallProfileViews' => new StallProfileViewsResource($this->whenLoaded('stallProfileViews')),
         ];
     }

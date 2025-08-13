@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Parameter;
 use App\Models\StallRates;
+use EloquentFilter\Filterable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stallprofile extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Filterable;
+
+    public $timestamps = false;
 
     protected $table = 'stallprofile';
 
@@ -45,6 +48,11 @@ class Stallprofile extends Model
     public function officecode()
     {
         return $this->hasOne(OfficeCode::class, 'marketOfficeCode', 'marketCode');
+    }
+
+    public function stallRental()
+    {
+        return $this->hasOne(StallRentalDet::class, 'stallNo', 'stallNo');
     }
 
     //rates computations

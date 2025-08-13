@@ -24,9 +24,15 @@ class StallService implements StallServiceInterface
     {
         return $this->stallRepository->findStallById($stallId);
     }
-    public function createStall(object $data)
+    public function createStall(object $payload)
     {
-        return $this->stallRepository->createStall($data);
+        // $payload->building;
+        // $payload->extension;
+        // $payload->stall_id;
+        // $payload->sub_section;
+        $payload->merge(['stallNo' => '001110011']);
+
+        return $this->stallRepository->createStall($payload);
     }
     public function updateStall(string $stallId, object $data)
     {

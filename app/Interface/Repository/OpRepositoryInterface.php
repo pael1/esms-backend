@@ -10,13 +10,15 @@ interface OpRepositoryInterface
 
     public function OPDueDate(bool $due = false);
 
-    public function checkOP(object $payload);
+    public function checkOP(object $payload, array $items);
 
     public function saveOP(object $payload);
 
     public function create(object $payload);
 
     public function update(object $payload, string $id);
+
+    public function getAccountCode(string $office_code, string $description, string $description1);
 
     public function delete(string $id);
 }

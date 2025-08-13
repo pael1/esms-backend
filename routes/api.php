@@ -60,6 +60,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('sync')->controller(SyncOpController::class)->group(function () {
         Route::get('data/arrears', 'arrearsMonth');
     });
+
+    //parameters
+    Route::prefix('parameters')->controller(ParameterController::class)->group(function () {
+        Route::get('sub-section/list', 'subSection');
+    });
 });
 
 Route::get('/sales-data', function () {

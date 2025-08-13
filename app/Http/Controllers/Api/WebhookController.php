@@ -18,11 +18,12 @@ class WebhookController extends Controller
 
         return response()->json(['status' => 'received'], 200);
     }
+
     public function subscribe(Request $request)
     {
         $accountcodes = [
             "40202140-20-72-1",
-            // Paste all your other codes here...
+            // Paste all your other accountcodes here...
         ];
 
         $callbackUrl = 'http://192.168.61.145/api/webhook/receiver';

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Stallowner;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stallrentaldet extends Model
 {
@@ -26,7 +27,7 @@ class Stallrentaldet extends Model
         'busDateStart',
         'capital',
         'lineOfBusiness',
-        'STALLOWNER_stallOwnerId ',
+        'STALLOWNER_stallOwnerId',
         'leaseContract ',
         'documentFiles ',
         'busIDStatus',
@@ -35,6 +36,11 @@ class Stallrentaldet extends Model
     public function stallProfile()
     {
         return $this->hasOne(Stallprofile::class, 'stallNo', 'stallNo');
+    }
+
+    public function stallOwner()
+    {
+        return $this->hasOne(Stallowner::class, 'stallOwnerId', 'STALLOWNER_stallOwnerId');
     }
 
     //views table

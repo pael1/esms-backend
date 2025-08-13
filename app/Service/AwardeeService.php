@@ -2,28 +2,31 @@
 
 namespace App\Service;
 
-use App\Http\Resources\AwardeeDetailsResource;
-use App\Http\Resources\AwardeeListResource;
-use App\Http\Resources\StallOPResource;
-use App\Http\Resources\StallOwnerAccountResource;
-use App\Http\Resources\StallOwnerChildResource;
-use App\Http\Resources\StallOwnerEmpResource;
-use App\Http\Resources\StallOwnerFilesResource;
-use App\Http\Resources\UserResource;
-use App\Interface\Repository\AwardeeRepositoryInterface;
-use App\Interface\Repository\LedgerRepositoryInterface;
-use App\Interface\Repository\OpRepositoryInterface;
-use App\Interface\Repository\SignatoryRepositoryInterface;
-use App\Interface\Repository\SyncOpRepositoryInterface;
-use App\Interface\Service\AwardeeServiceInterface;
-use App\Jobs\ProcessUnpaidOP;
-use App\Models\StallOP;
 use App\Pops\Api;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
+use App\Models\StallOP;
+use App\Models\Parameter;
 use Illuminate\Support\Str;
+use PhpParser\Builder\Param;
+use App\Jobs\ProcessUnpaidOP;
+use Illuminate\Http\Response;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\StallOPResource;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\AwardeeListResource;
+use App\Http\Resources\StallOwnerEmpResource;
+use App\Http\Resources\AwardeeDetailsResource;
+use App\Http\Resources\StallOwnerChildResource;
+use App\Http\Resources\StallOwnerFilesResource;
+use App\Http\Resources\StallOwnerAccountResource;
+use App\Interface\Service\AwardeeServiceInterface;
+use App\Interface\Repository\OpRepositoryInterface;
+use App\Interface\Repository\LedgerRepositoryInterface;
+use App\Interface\Repository\SyncOpRepositoryInterface;
+use App\Interface\Repository\AwardeeRepositoryInterface;
+use App\Interface\Repository\ParameterRepositoryInterface;
+use App\Interface\Repository\SignatoryRepositoryInterface;
 
 class AwardeeService implements AwardeeServiceInterface
 {
@@ -33,8 +36,9 @@ class AwardeeService implements AwardeeServiceInterface
     private $signatoryRepository;
     private $syncOpRepository;
     private $LedgerRepository;
+    private $parameterRepository;
 
-    public function __construct(AwardeeRepositoryInterface $awardeeRepository, Api $popsApi, OpRepositoryInterface $opRepository, SignatoryRepositoryInterface $signatoryRepository, SyncOpRepositoryInterface $syncOpRepository, LedgerRepositoryInterface $LedgerRepository)
+    public function __construct(AwardeeRepositoryInterface $awardeeRepository, Api $popsApi, OpRepositoryInterface $opRepository, SignatoryRepositoryInterface $signatoryRepository, SyncOpRepositoryInterface $syncOpRepository, LedgerRepositoryInterface $LedgerRepository, ParameterRepositoryInterface $parameterRepository)
     {
         $this->awardeeRepository = $awardeeRepository;
         $this->popsApi = $popsApi;
@@ -42,6 +46,7 @@ class AwardeeService implements AwardeeServiceInterface
         $this->signatoryRepository = $signatoryRepository;
         $this->syncOpRepository = $syncOpRepository;
         $this->LedgerRepository = $LedgerRepository;
+        $this->parameterRepository = $parameterRepository;
     }
 
     public function findManyAwardee(object $payload)
@@ -111,13 +116,13 @@ class AwardeeService implements AwardeeServiceInterface
 
     public function current_billing(object $payload)
     {
-        $is_op_exists = $this->opRepository->checkOP($payload);
-        // items already generated
-        if ($is_op_exists) {
-            return response()->json([
-                'message' => 'This Item/s are already generated',
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        // $is_op_exists = $this->opRepository->checkOP($payload);
+        // // items already generated
+        // if ($is_op_exists) {
+        //     return response()->json([
+        //         'message' => 'This Item/s are already generated',
+        //     ], Response::HTTP_BAD_REQUEST);
+        // }
 
         $connection = $this->popsApi->connect();
         $serverStatus = $this->popsApi->checkPopsStatus();
@@ -153,72 +158,95 @@ class AwardeeService implements AwardeeServiceInterface
             $payload->duedate = $this->opRepository->OPDueDate();
             $payload->signatoryid = $stallprofile->signatory->signatoryId;
 
-            // foreach ($items as $item) {
-            //     // Create the item for the basic amount
-            //     $newItems[] = [
-            //         'value' => $item['value'],
-            //         'label' => $item['label'],
-            //         'amountBasic' => $item['amountBasic'],
-            //         'fee' => 'rental',
-            //     ];
-
-            //     // Create the item for the interest
-            //     $newItems[] = [
-            //         'value' => $item['value'],
-            //         'label' => $item['label'],
-            //         'amountBasic' => $item['interest'],
-            //         'fee' => 'interest',
-            //     ];
-
-            //     // Create the item for the surcharge
-            //     $newItems[] = [
-            //         'value' => $item['value'],
-            //         'label' => $item['label'],
-            //         'amountBasic' => $item['surcharge'],
-            //         'fee' => 'surcharge',
-            //     ];
-
-            //     // Create the item for the extension
-            //     $newItems[] = [
-            //         'value' => $item['value'],
-            //         'label' => $item['label'],
-            //         'amountBasic' => $item['extensionRate'],
-            //         'fee' => 'extension',
-            //     ];
-            // }
-
-            // foreach ($newItems as $newItem) {
-            //     logger($newItem);
-            // }
-
+            //sectioncode description
+            $sectionCodeDes = $this->parameterRepository->getSection($stallprofile->sectionCode);
+            
+            $newItems = [];
             foreach ($items as $item) {
-                // $accountCodes = $this->awardeeRepository->accountCodes($officeCode, $has_extension, $item['value'], $stallprofile->sectionCode);
-                $accountCodes = $this->opRepository->accountCodes($officeCode, $has_extension, $item['value'], $stallprofile->sectionCode);
-                foreach ($accountCodes as &$account) {
-                    $extension = Str::contains(Str::lower($account->accountcode), $officeCode . '-39');
-                    if ($extension) {
-                        $account->amount = $item['extensionRate'] ?? 0;
-                        $accountCodeDesc = $account->description;
-                    } else {
-                        $account->amount = $item['amountBasic'] ?? 0;
-                        $accountCodeDesc = $account->description . " ({$item['label']})";
-                    }
-                    $totalAmount += $account->amount;
+                if($item['value'] === 'current') {
+                    $description = $sectionCodeDes;
+                    $description1 = 'Current';
+                } else {
+                    $description = $sectionCodeDes;
+                    $description1 = 'Previous';
+                }
+                $newItems[] = [
+                    'value' => $item['value'],
+                    'label' => $item['label'],
+                    'amount_basic' => $item['amountBasic'],
+                    'office_code' => $officeCode,
+                    'description' => $description,
+                    'description1' => $description1,
+                ];
 
-                    //save op
-                    $payload->accoutcodes = $account->accountcode;
-                    $payload->amount = $account->amount;
-                    $payload->OPRefId = $OPRefId;
-                    $payload->purpose = $item['label'];
-                    $this->opRepository->saveOP($payload);
-                    $this->LedgerRepository->createLedger($payload, $item);
-
-                    $itemsPaid[] = [
-                        'accountcode' => $account->accountcode,
-                        'description' => $accountCodeDesc,
-                        'amount' => $account->amount,
+                // Create the item for the interest
+                if($item['interest'] > 0) {
+                    $newItems[] = [
+                        'value' => $item['value'],
+                        'label' => $item['label'],
+                        'amount_basic' => $item['interest'],
+                        'office_code' => $officeCode,
+                        'description' => 'Fines',
+                        'description1' => 'Penalties',
                     ];
                 }
+                
+
+                // Create the item for the surcharge
+                if($item['surcharge'] > 0) {
+                    $newItems[] = [
+                        'value' => $item['value'],
+                        'label' => $item['label'],
+                        'amount_basic' => $item['surcharge'],
+                        'office_code' => $officeCode,
+                        'description' => 'Fines',
+                        'description1' => 'Penalties',
+                    ];
+                }
+
+                // Create the item for the extension
+                // if ($has_extension) {
+                //     $newItems[] = [
+                //         'value' => $item['value'],
+                //         'label' => $item['label'],
+                //         'amount_basic' => $item['extensionRate'],
+                //         'office_code' => $officeCode,
+                //         'description' => 'Extension',
+                //     ];
+                // }
+                
+            }
+
+            $is_op_exists = $this->opRepository->checkOP($payload, $newItems);
+            // items already generated
+            if ($is_op_exists) {
+                return response()->json([
+                    'message' => 'This Item/s are already generated',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            foreach ($newItems as $newItem) {
+                //get account code
+                $accountCode = $this->opRepository->getAccountCode($officeCode, $newItem['description'], $newItem['description1']);
+
+                // account code details
+                $popsAccountCode = $accountCode['accountcode'];
+                $popsDescription = $accountCode['description'];
+
+                $payload->accoutcodes = $popsAccountCode;
+                $payload->amount = $newItem['amount_basic'];
+                $payload->OPRefId = $OPRefId;
+                $payload->purpose = $newItem['label'];
+                $this->opRepository->saveOP($payload);
+                //will create cron on this, auto create ledger for the owner does not paid on current month
+                // $this->LedgerRepository->createLedger($payload, $newItem);
+                $totalAmount += $newItem['amount_basic'];
+
+                $itemsPaid[] = [
+                    'accountcode' => $popsAccountCode,
+                    'description' => $popsDescription,
+                    'amount' => $newItem['amount_basic'],
+                ];
             }
 
             //save to pops
@@ -227,7 +255,6 @@ class AwardeeService implements AwardeeServiceInterface
                 $this->popsApi->createPayment($payload);
             }
 
-            // $stall_profile->account_codes = $accountCodes;
             $signatory = $this->signatoryRepository->findById($stallprofile->signatory->signatoryId);
             $pdf = Pdf::loadView('pdf.top', [
                 'owner_name' => $payload->name,

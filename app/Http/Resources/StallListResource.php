@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\StallOwnerResource;
+use App\Http\Resources\StallRentalDetResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StallListResource extends JsonResource
@@ -14,6 +16,16 @@ class StallListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $awardee = null;
+
+        if ($this->stallRental && $this->stallRental->stallOwner) {
+            $awardee = trim(
+                $this->stallRental->stallOwner->firstname . ' ' .
+                $this->stallRental->stallOwner->midinit . '. ' .
+                $this->stallRental->stallOwner->lastname
+            );
+        }
+
         return [
             'stallProfileId' => $this->stallProfileId,
             'stallDescription' => $this->stallDescription,
@@ -22,8 +34,9 @@ class StallListResource extends JsonResource
             'stallAreaExt' => $this->stallAreaExt,
             'CFSI' => $this->CFSI,
             'ratePerDay' => $this->ratePerDay,
-            'awardee' => $this->firstname.' '.$this->midinit.'. '.$this->lastname,
-            'status' => $this->rentalStatus,
+            'awardee' => $awardee,
+            'status' => $this->stallStatus,
+            'stallRental' => StallRentalDetResource::make($this->whenLoaded('stallRental')),
         ];
     }
 }

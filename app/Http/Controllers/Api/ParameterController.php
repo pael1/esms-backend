@@ -23,6 +23,11 @@ class ParameterController extends Controller
         return $this->parameterService->findMany($request);
     }
 
+    public function subSection(Request $request)
+    {
+        return $this->parameterService->findSubSection($request);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

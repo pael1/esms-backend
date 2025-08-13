@@ -5,6 +5,8 @@ namespace App\Interface\Service;
 interface ParameterServiceInterface
 {
     public function findMany(object $payload);
+    
+    public function findSubSection(object $payload);
 
     // public function findByFieldIdFieldValue(string $fieldId, string $fieldValue);
 

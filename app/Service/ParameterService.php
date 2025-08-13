@@ -22,6 +22,13 @@ class ParameterService implements ParameterServiceInterface
         return ParameterResource::collection($parameter);
     }
 
+    public function findSubSection(object $payload)
+    {
+        $parameter = $this->parameterRepository->findSubSection($payload);
+
+        return ParameterResource::collection($parameter);
+    }
+
     // public function findByFieldIdFieldValue(string $fieldId, string $fieldValue)
     // {
     //     $parameter = $this->parameterRepository->findByFieldIdFieldValue($fieldId, $fieldValue);

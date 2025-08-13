@@ -28,7 +28,7 @@ class StallController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $this->stallService->createStall($request);
     }
 
     /**

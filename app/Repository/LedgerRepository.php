@@ -21,6 +21,7 @@ class LedgerRepository implements LedgerRepositoryInterface
     {
         return StallOwnerAccount::where('ownerId', $payload->ownerId)
             ->whereNull('ORNum')
+            ->orderBy('stallOwnerAccountId', 'desc')
             ->get();
     }
 
