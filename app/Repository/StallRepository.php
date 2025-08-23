@@ -36,11 +36,11 @@ class StallRepository implements StallRepositoryInterface
     }
     public function findStallById(string $stallId)
     {
-        // Implementation for finding a stall by ID
+        $stall = Stallprofile::findOrFail($stallId);
+        return $stall;
     }
     public function createStall(object $payload)
     {
-        // logger($payload);
         $sp = new Stallprofile();
         $sp->stallArea = $payload->area;
         $sp->StallAreaExt = $payload->area_extension;
@@ -51,15 +51,42 @@ class StallRepository implements StallRepositoryInterface
         $sp->marketCode = $payload->market;
         $sp->sectionCode = $payload->sectionCode;
         $sp->stallNoId = $payload->stallNoId;
-        // $sp->months = $payload->sub_section;
         $sp->stallType = $payload->type;
+        $sp->section_id = $payload->section;
+        $sp->sub_section_id = $payload->sub_section;
+        $sp->building_id = $payload->building;
+        $sp->stall_id_ext = $payload->extension;
+        $sp->stall_no_id = $payload->stall_id;
         $sp->save();
 
         return $sp->fresh();
     }
-    public function updateStall(string $stallId, object $data)
+    public function updateStall(string $stallId, object $payload)
     {
-        // Implementation for updating a stall
+        $sp = Stallprofile::findOrFail($stallId);
+        $sp->stallArea = $payload->area;
+        $sp->StallAreaExt = $payload->area_extension;
+        $sp->stallNo = $payload->stallNo;
+        $sp->CFSI = $payload->cfsi;
+        $sp->stallClass = $payload->class;
+        $sp->stallDescription = $payload->stallDescription;
+        $sp->marketCode = $payload->market;
+        $sp->sectionCode = $payload->sectionCode;
+        $sp->stallNoId = $payload->stallNoId;
+        $sp->stallType = $payload->type;
+        $sp->section_id = $payload->section;
+        $sp->sub_section_id = $payload->sub_section;
+        $sp->building_id = $payload->building;
+        $sp->stall_id_ext = $payload->extension;
+        $sp->stall_no_id = $payload->stall_id;
+        $sp->save();
+
+        return $sp->fresh();
+
+        //dli mo gana kay dli same ug name ang payload ug specific field
+        // $stall = Stallprofile::findOrFail($stallId);
+        // $stall->update((array) $payload);
+        // return $stall->fresh();
     }
     public function deleteStall(string $stallId)
     {

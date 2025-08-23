@@ -38,6 +38,11 @@ class Stallprofile extends Model
         'ratePerMonth ',
         'stallNoId ',
         'StallAreaExt',
+        'section_id ',
+        'sub_section_id ',
+        'building_id ',
+        'stall_id_ext',
+        'stall_no_id',
     ];
 
     public function signatory()

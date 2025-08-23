@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Stallprofile;
 use Illuminate\Http\Request;
+use GuzzleHttp\Promise\Create;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateStallRequest;
 use App\Interface\Service\StallServiceInterface;
 
 class StallController extends Controller
@@ -26,7 +29,7 @@ class StallController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateStallRequest $request)
     {
         return $this->stallService->createStall($request);
     }
@@ -36,15 +39,17 @@ class StallController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return $this->stallService->findStallById($id);
+        // $stall = Stallprofile::findOrFail($id);
+        // return response()->json($stall);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CreateStallRequest $request, string $id)
     {
-        //
+        return $this->stallService->updateStall($id, $request);
     }
 
     /**
