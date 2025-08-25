@@ -30,6 +30,7 @@ class StallListResource extends JsonResource
             'stallProfileId' => $this->stallProfileId,
             'stallDescription' => $this->stallDescription,
             'stallNo' => $this->stallNo,
+            'stallNoId' => $this->stallNoId,
             'stallArea' => $this->stallArea,
             'stallAreaExt' => $this->stallAreaExt,
             'CFSI' => $this->CFSI,

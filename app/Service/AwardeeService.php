@@ -114,6 +114,13 @@ class AwardeeService implements AwardeeServiceInterface
         return new AwardeeDetailsResource($awardee);
     }
 
+    public function create(array $payload)
+    {
+        $stallOwner = $this->awardeeRepository->create($payload);
+
+        return $stallOwner;
+    }
+
     public function current_billing(object $payload)
     {
         // $is_op_exists = $this->opRepository->checkOP($payload);

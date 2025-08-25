@@ -24,6 +24,38 @@ use Illuminate\Support\Str;
 
 class AwardeeRepository implements AwardeeRepositoryInterface
 {
+
+    public function create(array $payload)
+    {
+        // $stallOwner = new Stallowner();
+        //  // from payload
+        // $stallOwner->lastname        = $payload->lastname ?? null;
+        // $stallOwner->firstname       = $payload->firstname ?? null;
+        // $stallOwner->midinit         = $payload->midinit ?? null;
+        // $stallOwner->civilStatus     = $payload->civilStatus ?? null;
+        // $stallOwner->address         = $payload->address ?? null;
+        // $stallOwner->spouseLastname  = $payload->spouseLastname ?? null;
+        // $stallOwner->spouseFirstname = $payload->spouseFirstname ?? null;
+        // $stallOwner->spouseMidint    = $payload->spouseMidint ?? null;
+        // $stallOwner->attachIdPhoto   = $payload->attachIdPhoto ?? null;
+        // $stallOwner->contactnumber   = $payload->contactnumber ?? null;
+
+        // // fixed / generated values
+        // $stallOwner->ownerStatus   = "ACTIVE";
+        // $stallOwner->ownerId       = 25000057; // you might want to auto-generate this instead
+        // $stallOwner->dateRegister  = now();
+        // $stallOwner->save();
+
+        // return $stallOwner->fresh();
+
+        $payload['ownerStatus']  = "ACTIVE";
+        $payload['ownerId']      = "25000057";
+        $payload['dateRegister'] = now();
+        $stallOwner = Stallowner::create($payload);
+
+        return $stallOwner->fresh();
+    }
+
     public function findMany(object $payload)
     {
         $query = DB::table('stallowner as a')

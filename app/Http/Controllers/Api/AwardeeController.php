@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreStallOwnerRequest;
 use App\Interface\Service\AwardeeServiceInterface;
 use App\Models\Awardee;
 use Illuminate\Http\Request;
@@ -35,9 +36,12 @@ class AwardeeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreStallOwnerRequest $request)
     {
-        //
+        //cast as array if no $validated it was object matic
+        $validated = $request->validated();
+
+        return $this->awardeeService->create($validated);
     }
 
     /**

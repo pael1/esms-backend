@@ -83,7 +83,7 @@ class StallRepository implements StallRepositoryInterface
 
         return $sp->fresh();
 
-        //dli mo gana kay dli same ug name ang payload ug specific field
+        //dli mo gana kay dli same ug name ang payload ug specific fields name sa db
         // $stall = Stallprofile::findOrFail($stallId);
         // $stall->update((array) $payload);
         // return $stall->fresh();

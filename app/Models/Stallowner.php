@@ -9,6 +9,8 @@ class Stallowner extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'stallowner';
 
     protected $primaryKey = 'stallOwnerId';
