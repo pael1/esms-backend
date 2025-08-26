@@ -37,6 +37,7 @@ class StoreStallOwnerRequest extends FormRequest
             // 'ownerStatus'     => 'nullable|string|in:ACTIVE,INACTIVE',
             // 'ownerId'         => 'nullable|string',
             // 'dateRegister'    => 'nullable|date',
+            'children'             => 'nullable|array',
         ];
     }
 }

@@ -38,22 +38,24 @@ class StallService implements StallServiceInterface
         $section = $this->parameterRepository->findByFieldIdFieldValue('SECTIONCODE', $payload->section);
         $sectionSub = ($payload->sub_section) ? $this->parameterRepository->findByFieldIdFieldValue('SERIESCODE', $payload->sub_section) : null;
         $market = $this->parameterRepository->findByFieldIdFieldValue('MARKETCODE', $payload->market);
-        if (!empty($payload->cfsi)) {
-            $cfsi = $this->parameterRepository->findByFieldIdFieldValue('CFSI', $payload->cfsi);
-            $payload->cfsi = $cfsi?->fieldDescription ?? '';
-        } else {
-            $payload->cfsi = '';
-        }
+        // if (!empty($payload->cfsi)) {
+        //     $cfsi = $this->parameterRepository->findByFieldIdFieldValue('CFSI', $payload->cfsi);
+        //     $payload->cfsi = $cfsi?->fieldDescription ?? '';
+        // } else {
+        //     $payload->cfsi = '';
+        // }
 
         $hasSubSection = ($payload->sub_section) ? ' ('.$sectionSub.') ' : ' ';
         $marketDescription = $building->fieldDescription.', '.$section->fieldDescription.' '.$payload->type.''.$hasSubSection.''.$market->fieldDescription;
         
         $sectionFormat = ($payload->sub_section) ? $payload->sub_section : $payload->section . '00';
-        $stallNoFormat = $payload->market.''.$sectionFormat.''.$payload->stall_id . '' . $payload->extension;
+        $sectionCode = $payload->building.''.$sectionFormat;
+        $stallNoFormat = $payload->market.''.$sectionCode.''.$payload->stall_id . '' . $payload->extension;
         
         $payload->stallNo = $stallNoFormat;
         $payload->stallDescription = $marketDescription;
-        $payload->sectionCode = $payload->building.''.$sectionFormat;
+        $payload->sectionCode = $sectionCode;
+        // $payload->stallStatus = 'available';
         $payload->stallNoId = $payload->stall_id . '' . $payload->extension;
 
         return $this->stallRepository->createStall($payload);
@@ -65,12 +67,12 @@ class StallService implements StallServiceInterface
         $section = $this->parameterRepository->findByFieldIdFieldValue('SECTIONCODE', $payload->section);
         $sectionSub = ($payload->sub_section) ? $this->parameterRepository->findByFieldIdFieldValue('SERIESCODE', $payload->sub_section) : null;
         $market = $this->parameterRepository->findByFieldIdFieldValue('MARKETCODE', $payload->market);
-        if (!empty($payload->cfsi)) {
-            $cfsi = $this->parameterRepository->findByFieldIdFieldValue('CFSI', $payload->cfsi);
-            $payload->cfsi = $cfsi?->fieldDescription ?? '';
-        } else {
-            $payload->cfsi = '';
-        }
+        // if (!empty($payload->cfsi)) {
+        //     $cfsi = $this->parameterRepository->findByFieldIdFieldValue('CFSI', $payload->cfsi);
+        //     $payload->cfsi = $cfsi?->fieldDescription ?? '';
+        // } else {
+        //     $payload->cfsi = '';
+        // }
 
         $hasSubSection = ($payload->sub_section) ? ' ('.$sectionSub.') ' : ' ';
         $marketDescription = $building->fieldDescription.', '.$section->fieldDescription.' '.$payload->type.''.$hasSubSection.''.$market->fieldDescription;

@@ -17,7 +17,7 @@ class Stallowner extends Model
 
     protected $fillable = [
         'stallOwnerId',
-        'ownerId ',
+        'ownerId',
         'lastname',
         'firstname',
         'midinit',
@@ -35,5 +35,10 @@ class Stallowner extends Model
     public function stallRentalDet()
     {
         return $this->hasOne(Stallrentaldet::class, 'ownerId', 'ownerId');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(StallOwnerChild::class, 'STALLOWNER_stallOwnerId', 'stallOwnerId');
     }
 }

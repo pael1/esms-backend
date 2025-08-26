@@ -9,6 +9,8 @@ class StallOwnerChild extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'stallownerchild';
 
     protected $primaryKey = 'stallOwnerChildId';
