@@ -9,6 +9,8 @@ class StallOwnerEmp extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'stallowneremp';
 
     protected $primaryKey = 'stallOwnerEmpId';
@@ -18,7 +20,7 @@ class StallOwnerEmp extends Model
         'ownerId',
         'employeeName',
         'dateOfBirth',
-        'STALLOWNER_stallOwnerId ',
+        'STALLOWNER_stallOwnerId',
         'age',
         'address',
     ];

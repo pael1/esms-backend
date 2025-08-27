@@ -52,11 +52,22 @@ class AwardeeRepository implements AwardeeRepositoryInterface
         $payload['ownerId']      = "25000057";
         $payload['dateRegister'] = now();
         $stallOwner = Stallowner::create($payload);
+
         foreach ($payload['children'] as $child) {
             $stallOwner->children()->create([
                 'ownerId'      => $stallOwner->ownerId,
                 'childName'      => $child['childName'],
                 'childBDate' => $child['childBDate'],
+            ]);
+        }
+
+        foreach ($payload['employees'] as $child) {
+            $stallOwner->employees()->create([
+                'ownerId'      => $stallOwner->ownerId,
+                'employeeName'      => $child['employeeName'],
+                'dateOfBirth' => $child['dateOfBirth'],
+                'age' => $child['age'],
+                'address' => $child['address'],
             ]);
         }
 
