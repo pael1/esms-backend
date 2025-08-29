@@ -98,7 +98,11 @@ class AwardeeService implements AwardeeServiceInterface
         $awardee->spouse_full_name = "{$awardee->spouseFirstname} " .
             ($awardee->spouseMidint ? "{$awardee->spouseMidint}. " : '') .
             "{$awardee->spouseLastname}";
-        $awardee->rate_per_month = $awardee->stallRentalDet->stallProfile->ratePerDay * $days_in_month;
+        //     logger($awardee->stallRentalDet);
+        // $awardee->rate_per_month = $awardee->stallRentalDet->stallProfile->ratePerDay * $days_in_month;
+        $ratePerDay = $awardee->stallRentalDet?->stallProfile?->ratePerDay;
+
+        $awardee->rate_per_month = $ratePerDay ? $ratePerDay * $days_in_month : 0;
 
         //process the sync function here
         $unpaid_op = $this->syncOpRepository->findManyById($ownerID);

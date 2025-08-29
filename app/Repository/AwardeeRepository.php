@@ -27,65 +27,58 @@ class AwardeeRepository implements AwardeeRepositoryInterface
 
     public function create(array $payload)
     {
-        // $stallOwner = new Stallowner();
-        //  // from payload
-        // $stallOwner->lastname        = $payload->lastname ?? null;
-        // $stallOwner->firstname       = $payload->firstname ?? null;
-        // $stallOwner->midinit         = $payload->midinit ?? null;
-        // $stallOwner->civilStatus     = $payload->civilStatus ?? null;
-        // $stallOwner->address         = $payload->address ?? null;
-        // $stallOwner->spouseLastname  = $payload->spouseLastname ?? null;
-        // $stallOwner->spouseFirstname = $payload->spouseFirstname ?? null;
-        // $stallOwner->spouseMidint    = $payload->spouseMidint ?? null;
-        // $stallOwner->attachIdPhoto   = $payload->attachIdPhoto ?? null;
-        // $stallOwner->contactnumber   = $payload->contactnumber ?? null;
-
-        // // fixed / generated values
-        // $stallOwner->ownerStatus   = "ACTIVE";
-        // $stallOwner->ownerId       = 25000057; // you might want to auto-generate this instead
-        // $stallOwner->dateRegister  = now();
-        // $stallOwner->save();
-
-        // return $stallOwner->fresh();
-
         //generate ownerId
         $nextOwnerId = Stallowner::max('ownerId') + 1;
 
         $payload['ownerId'] = str_pad($nextOwnerId, 8, '0', STR_PAD_LEFT);
         $payload['ownerStatus']  = "ACTIVE";
         $payload['dateRegister'] = now();
-        $stallOwner = Stallowner::create($payload);
+        
+        // logger($payload);
+        if (!empty($payload['attachIdPhoto'])) {
 
-        foreach ($payload['children'] as $child) {
-            $stallOwner->children()->create([
-                'ownerId'      => $stallOwner->ownerId,
-                'childName'      => $child['childName'],
-                'childBDate' => $child['childBDate'],
-            ]);
-        }
-
-        foreach ($payload['employees'] as $employee) {
-            $stallOwner->employees()->create([
-                'ownerId'      => $stallOwner->ownerId,
-                'employeeName'      => $employee['employeeName'],
-                'dateOfBirth' => $employee['dateOfBirth'],
-                'age' => $employee['age'],
-                'address' => $employee['address'],
-            ]);
-        }
-        foreach ($payload['files'] as $file) {
-            // Unique filename
-            $uploadedFile = $file['filePath']; // real UploadedFile object
-            
+            $uploadedFile = $payload['attachIdPhoto'];
             $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
-            // Save under: storage/app/public/files/{ownerId}/filename
-            $path = $uploadedFile->storeAs("files/{$stallOwner->ownerId}", $filename, 'public');
+            $payload['attachIdPhoto'] = $uploadedFile->storeAs("profile_pic/{$payload['ownerId']}", $filename, 'public');
+        }
 
-            $stallOwner->files()->create([
-                'attachFileType'      => $file['attachFileType'],
-                'filePath' => $path,
-            ]);
+        $stallOwner = Stallowner::create($payload);
+
+        if (!empty($payload['children'])) {
+            foreach ($payload['children'] as $child) {
+                $stallOwner->children()->create([
+                    'ownerId'     => $stallOwner->ownerId,
+                    'childName'   => $child['childName'] ?? null,
+                    'childBDate'  => $child['childBDate'] ?? null,
+                ]);
+            }
+        }
+
+        if (!empty($payload['employees'])) {
+            foreach ($payload['employees'] as $employee) {
+                $stallOwner->employees()->create([
+                    'ownerId'       => $stallOwner->ownerId,
+                    'employeeName'  => $employee['employeeName'] ?? null,
+                    'dateOfBirth'   => $employee['dateOfBirth'] ?? null,
+                    'age'           => $employee['age'] ?? null,
+                    'address'       => $employee['address'] ?? null,
+                ]);
+            }
+        }
+
+        if (!empty($payload['files'])) {
+            foreach ($payload['files'] as $file) {
+                $uploadedFile = $file['filePath']; // real UploadedFile object
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
+                $path = $uploadedFile->storeAs("files/{$stallOwner->ownerId}", $filename, 'public');
+
+                $stallOwner->files()->create([
+                    'attachFileType' => $file['attachFileType'] ?? null,
+                    'filePath'       => $path,
+                ]);
+            }
         }
 
         return $stallOwner->fresh();

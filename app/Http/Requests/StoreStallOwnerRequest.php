@@ -30,7 +30,7 @@ class StoreStallOwnerRequest extends FormRequest
             'spouseLastname'  => 'nullable|string|max:100',
             'spouseFirstname' => 'nullable|string|max:100',
             'spouseMidint'    => 'nullable|string|max:5',
-            // 'attachIdPhoto'   => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+            'attachIdPhoto'   => 'nullable|file|mimes:jpg,png,pdf|max:2048',
             'contactnumber'   => 'required|string|max:20',
             
             // system-generated but still validated if passed
