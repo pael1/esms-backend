@@ -46,4 +46,9 @@ class Stallowner extends Model
     {
         return $this->hasMany(StallOwnerEmp::class, 'STALLOWNER_stallOwnerId', 'stallOwnerId');
     }
+
+    public function files()
+    {
+        return $this->hasMany(StallOwnerFiles::class, 'ownerId', 'ownerId');
+    }
 }

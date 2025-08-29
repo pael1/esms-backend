@@ -9,6 +9,8 @@ class StallOwnerFiles extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'stallownerfiles';
 
     protected $primaryKey = 'stallOwnerFileId';

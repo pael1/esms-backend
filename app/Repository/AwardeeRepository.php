@@ -48,8 +48,11 @@ class AwardeeRepository implements AwardeeRepositoryInterface
 
         // return $stallOwner->fresh();
 
+        //generate ownerId
+        $nextOwnerId = Stallowner::max('ownerId') + 1;
+
+        $payload['ownerId'] = str_pad($nextOwnerId, 8, '0', STR_PAD_LEFT);
         $payload['ownerStatus']  = "ACTIVE";
-        $payload['ownerId']      = "25000057";
         $payload['dateRegister'] = now();
         $stallOwner = Stallowner::create($payload);
 
@@ -61,13 +64,27 @@ class AwardeeRepository implements AwardeeRepositoryInterface
             ]);
         }
 
-        foreach ($payload['employees'] as $child) {
+        foreach ($payload['employees'] as $employee) {
             $stallOwner->employees()->create([
                 'ownerId'      => $stallOwner->ownerId,
-                'employeeName'      => $child['employeeName'],
-                'dateOfBirth' => $child['dateOfBirth'],
-                'age' => $child['age'],
-                'address' => $child['address'],
+                'employeeName'      => $employee['employeeName'],
+                'dateOfBirth' => $employee['dateOfBirth'],
+                'age' => $employee['age'],
+                'address' => $employee['address'],
+            ]);
+        }
+        foreach ($payload['files'] as $file) {
+            // Unique filename
+            $uploadedFile = $file['filePath']; // real UploadedFile object
+            
+            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
+            // Save under: storage/app/public/files/{ownerId}/filename
+            $path = $uploadedFile->storeAs("files/{$stallOwner->ownerId}", $filename, 'public');
+
+            $stallOwner->files()->create([
+                'attachFileType'      => $file['attachFileType'],
+                'filePath' => $path,
             ]);
         }
 
