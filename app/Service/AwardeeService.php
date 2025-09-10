@@ -148,18 +148,12 @@ class AwardeeService implements AwardeeServiceInterface
             return response()->json([
                 'message' => 'This IP is not whitelisted.',
             ], Response::HTTP_BAD_REQUEST);
-        }
-
-        if ($serverStatus === 'Down') {
+        } else if ($serverStatus === 'Down') {
             return response()->json([
                 'message' => 'POPS server down.',
             ], Response::HTTP_BAD_REQUEST);
-        }
-
-        if ($connection === 'Success.' && $serverStatus === 'Up') {
-
-            $has_extension = ($payload->extension == '0.00') ? false : true;
-
+        } else {
+            // $has_extension = ($payload->extension == '0.00') ? false : true;
             $stallprofile = json_decode($payload->stallprofile);
 
             $officeCode = substr($stallprofile->officecode->officeCode, 0, 2) . '-' . substr($stallprofile->officecode->officeCode, 2);
@@ -307,11 +301,7 @@ class AwardeeService implements AwardeeServiceInterface
             Storage::put($filename, $pdf->output());
 
             return response($pdf->output(), 200)->header('Content-Type', 'application/pdf');
-
         }
 
-        return response()->json([
-            'message' => 'Something went wrong. Please try again.',
-        ], Response::HTTP_BAD_REQUEST);
     }
 }
