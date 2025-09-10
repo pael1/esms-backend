@@ -143,6 +143,18 @@ class AwardeeService implements AwardeeServiceInterface
         $connection = $this->popsApi->connect();
         $serverStatus = $this->popsApi->checkPopsStatus();
 
+        if (!$connection === 'Success.') {
+            return response()->json([
+                'message' => 'This IP is not whitelisted.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($serverStatus === 'Down') {
+            return response()->json([
+                'message' => 'POPS server down.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         if ($connection === 'Success.' && $serverStatus === 'Up') {
 
             $has_extension = ($payload->extension == '0.00') ? false : true;
@@ -294,10 +306,11 @@ class AwardeeService implements AwardeeServiceInterface
             Storage::put($filename, $pdf->output());
 
             return response($pdf->output(), 200)->header('Content-Type', 'application/pdf');
+
         }
 
         return response()->json([
-            'message' => 'POPS server down.',
+            'message' => 'Something went wrong. Please try again.',
         ], Response::HTTP_BAD_REQUEST);
     }
 }
