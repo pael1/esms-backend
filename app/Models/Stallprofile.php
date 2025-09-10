@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use App\Models\Parameter;
+use App\Models\Signatory;
+use App\Models\OfficeCode;
 use App\Models\StallRates;
+use App\Models\Stallrentaldet;
 use EloquentFilter\Filterable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
@@ -57,7 +60,7 @@ class Stallprofile extends Model
 
     public function stallRental()
     {
-        return $this->hasOne(StallRentalDet::class, 'stallNo', 'stallNo');
+        return $this->hasOne(Stallrentaldet::class, 'stallNo', 'stallNo');
     }
 
     //rates computations
