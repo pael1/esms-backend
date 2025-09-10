@@ -142,7 +142,10 @@ class AwardeeService implements AwardeeServiceInterface
 
         $connection = $this->popsApi->connect();
         $serverStatus = $this->popsApi->checkPopsStatus();
-
+        logger($connection);
+        logger($serverStatus);
+    
+            //enhance error handling
         if (!$connection === 'Success.') {
             return response()->json([
                 'message' => 'This IP is not whitelisted.',
