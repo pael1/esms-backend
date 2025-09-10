@@ -10,7 +10,11 @@ class Api
 
     public function __construct()
     {
-        $this->apiEndpoint = config('services.pops_url');
+        if (app()->environment('local', 'staging')) {
+            $this->apiEndpoint = config('services.pops_url_staging');
+        } else {
+            $this->apiEndpoint = config('services.pops_url');
+        }
     }
 
     public function connect()

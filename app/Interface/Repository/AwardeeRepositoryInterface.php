@@ -19,4 +19,6 @@ interface AwardeeRepositoryInterface
     public function findByOwnerId(string $AwardeeId);
 
     public function create(array $payload);
+
+    public function update(string $id, object $payload);
 }

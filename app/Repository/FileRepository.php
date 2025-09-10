@@ -2,17 +2,19 @@
 
 namespace App\Repository;
 
-use App\Interface\Repository\ChildrenRepositoryInterface;
-use App\Models\StallOwnerChild;
 use App\Models\User;
+use App\Models\StallOwnerEmp;
 use Illuminate\Http\Response;
+use App\Models\StallOwnerChild;
 use Illuminate\Support\Facades\Hash;
+use App\Interface\Repository\FileRepositoryInterface;
+use App\Models\StallOwnerFiles;
 
-class ChildrenRepository implements ChildrenRepositoryInterface
+class FileRepository implements FileRepositoryInterface
 {
     public function findMany(object $payload)
     {
-        return StallOwnerChild::where('ownerId', $payload->ownerId)->paginate(10);
+        return StallOwnerFiles::where('ownerId', $payload->ownerId)->paginate(10);
     }
 
     public function create(object $payload)
@@ -50,8 +52,8 @@ class ChildrenRepository implements ChildrenRepositoryInterface
 
     public function delete(string $id)
     {
-        $child = StallOwnerChild::findOrFail($id);
-        return $child->delete();
+        $file = StallOwnerFiles::findOrFail($id);
+        return $file->delete();
 
         // return response()->json([
         //     //resource/lang/exception.php

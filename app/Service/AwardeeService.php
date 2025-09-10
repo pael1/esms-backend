@@ -125,6 +125,11 @@ class AwardeeService implements AwardeeServiceInterface
         return $stallOwner;
     }
 
+    public function update(string $id, object $payload)
+    {
+        return $this->awardeeRepository->update($id, $payload);
+    }
+
     public function current_billing(object $payload)
     {
         // $is_op_exists = $this->opRepository->checkOP($payload);
@@ -262,9 +267,7 @@ class AwardeeService implements AwardeeServiceInterface
 
             //save to pops
             $payload->items = $itemsPaid;
-            if (!app()->environment('local')) {
-                $this->popsApi->createPayment($payload);
-            }
+            $this->popsApi->createPayment($payload);
 
             $signatory = $this->signatoryRepository->findById($stallprofile->signatory->signatoryId);
             $pdf = Pdf::loadView('pdf.top', [

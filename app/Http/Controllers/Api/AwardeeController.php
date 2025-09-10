@@ -63,9 +63,9 @@ class AwardeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Awardee $awardee)
+    public function update(Request $request, string $id)
     {
-        //
+        return $this->awardeeService->update($id, $request);
     }
 
     /**

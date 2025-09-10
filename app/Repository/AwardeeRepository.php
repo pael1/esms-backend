@@ -2,86 +2,195 @@
 
 namespace App\Repository;
 
-use App\Interface\Repository\AwardeeRepositoryInterface;
-use App\Models\ExpirationDate;
-use App\Models\Parameter;
-use App\Models\StallOP;
-use App\Models\Stallowner;
-use App\Models\StallOwnerAccount;
-use App\Models\StallOwnerChild;
-use App\Models\StallOwnerEmp;
-use App\Models\StallOwnerFiles;
-use App\Models\StallProfileViews;
-use App\Models\Stallrentaldet;
-use App\Models\User;
-use App\Models\UserAccount;
+use Exception;
 use App\Pops\Api;
 use Carbon\Carbon;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\StallOP;
+use App\Models\Parameter;
+use App\Models\Stallowner;
+use App\Models\UserAccount;
 use Illuminate\Support\Str;
+use App\Models\StallOwnerEmp;
+use Illuminate\Http\Response;
+use App\Models\ExpirationDate;
+use App\Models\Stallrentaldet;
+use App\Models\StallOwnerChild;
+use App\Models\StallOwnerFiles;
+use App\Models\StallOwnerAccount;
+use App\Models\StallProfileViews;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use App\Interface\Repository\AwardeeRepositoryInterface;
 
 class AwardeeRepository implements AwardeeRepositoryInterface
 {
 
     public function create(array $payload)
     {
-        //generate ownerId
-        $nextOwnerId = Stallowner::max('ownerId') + 1;
+        try {
+            return DB::transaction(function () use ($payload) {
+                // generate ownerId
+                $nextOwnerId = Stallowner::max('ownerId') + 1;
 
-        $payload['ownerId'] = str_pad($nextOwnerId, 8, '0', STR_PAD_LEFT);
-        $payload['ownerStatus']  = "ACTIVE";
-        $payload['dateRegister'] = now();
-        
-        // logger($payload);
-        if (!empty($payload['attachIdPhoto'])) {
+                $payload['ownerId']      = str_pad($nextOwnerId, 8, '0', STR_PAD_LEFT);
+                $payload['ownerStatus']  = "ACTIVE";
+                $payload['dateRegister'] = now();
+                
+                // Profile Photo Upload
+                if (!empty($payload['attachIdPhoto'])) {
+                    $uploadedFile = $payload['attachIdPhoto'];
+                    $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
-            $uploadedFile = $payload['attachIdPhoto'];
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                    $payload['attachIdPhoto'] = $uploadedFile->storeAs(
+                        "profile_pic/{$payload['ownerId']}", 
+                        $filename, 
+                        'public'
+                    );
+                }
 
-            $payload['attachIdPhoto'] = $uploadedFile->storeAs("profile_pic/{$payload['ownerId']}", $filename, 'public');
+                // Create Stall Owner
+                $stallOwner = Stallowner::create($payload);
+
+                // Save Children
+                if (!empty($payload['children'])) {
+                    foreach ($payload['children'] as $child) {
+                        $stallOwner->children()->create([
+                            'ownerId'    => $stallOwner->ownerId,
+                            'childName'  => $child['childName'] ?? null,
+                            'childBDate' => $child['childBDate'] ?? null,
+                        ]);
+                    }
+                }
+
+                // Save Employees
+                if (!empty($payload['employees'])) {
+                    foreach ($payload['employees'] as $employee) {
+                        $stallOwner->employees()->create([
+                            'ownerId'      => $stallOwner->ownerId,
+                            'employeeName' => $employee['employeeName'] ?? null,
+                            'dateOfBirth'  => $employee['dateOfBirth'] ?? null,
+                            'age'          => $employee['age'] ?? null,
+                            'address'      => $employee['address'] ?? null,
+                        ]);
+                    }
+                }
+
+                // Save Files
+                if (!empty($payload['files'])) {
+                    foreach ($payload['files'] as $file) {
+                        $uploadedFile = $file['filePath']; // real UploadedFile object
+                        $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
+                        $path = $uploadedFile->storeAs(
+                            "files/{$stallOwner->ownerId}", 
+                            $filename, 
+                            'public'
+                        );
+
+                        $stallOwner->files()->create([
+                            'attachFileType' => $file['attachFileType'] ?? null,
+                            'filePath'       => $path,
+                        ]);
+                    }
+                }
+
+                return $stallOwner->fresh();
+            });
+        } catch (Exception $e) {
+            // Rollback is automatic if an exception occurs
+            Log::error('Failed to create Stall Owner', [
+                'error'   => $e->getMessage(),
+                'payload' => $payload
+            ]);
+
+            // You can throw a custom exception if you want
+            throw new Exception("Something went wrong while saving Stall Owner. Please try again.");
         }
+    }
 
-        $stallOwner = Stallowner::create($payload);
+    public function update(string $id, object $payload)
+    {
+        try {
+            return DB::transaction(function () use ($id, $payload) {
+                // Find existing Stall Owner
+                // $stallOwner = Stallowner::findOrFail($id);
+                $stallOwner = Stallowner::where('ownerId', $id)->firstOrFail();
 
-        if (!empty($payload['children'])) {
-            foreach ($payload['children'] as $child) {
-                $stallOwner->children()->create([
-                    'ownerId'     => $stallOwner->ownerId,
-                    'childName'   => $child['childName'] ?? null,
-                    'childBDate'  => $child['childBDate'] ?? null,
-                ]);
-            }
+                // Profile Photo Upload
+                if (!empty($payload['attachIdPhoto'])) {
+                    $uploadedFile = $payload['attachIdPhoto'];
+                    $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
+                    $payload['attachIdPhoto'] = $uploadedFile->storeAs(
+                        "profile_pic/{$stallOwner->ownerId}", 
+                        $filename, 
+                        'public'
+                    );
+                }
+
+                // Update Stall Owner (ignore related fields)
+                $stallOwner->update(
+                    collect($payload)->except(['children','employees','files'])->toArray()
+                );
+
+                // Update Children
+                if (isset($payload['children'])) {
+                    // $stallOwner->children()->delete();
+                    foreach ($payload['children'] as $child) {
+                        $stallOwner->children()->create([
+                            'ownerId'    => $stallOwner->ownerId,
+                            'childName'  => $child['childName'] ?? null,
+                            'childBDate' => $child['childBDate'] ?? null,
+                        ]);
+                    }
+                }
+
+                // Update Employees
+                if (isset($payload['employees'])) {
+                    // $stallOwner->employees()->delete();
+                    foreach ($payload['employees'] as $employee) {
+                        $stallOwner->employees()->create([
+                            'ownerId'      => $stallOwner->ownerId,
+                            'employeeName' => $employee['employeeName'] ?? null,
+                            'dateOfBirth'  => $employee['dateOfBirth'] ?? null,
+                            'age'          => $employee['age'] ?? null,
+                            'address'      => $employee['address'] ?? null,
+                        ]);
+                    }
+                }
+
+                // Update Files
+                if (isset($payload['files'])) {
+                    // $stallOwner->files()->delete();
+                    foreach ($payload['files'] as $file) {
+                        $uploadedFile = $file['filePath']; // real UploadedFile object
+                        $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
+                        $path = $uploadedFile->storeAs(
+                            "files/{$stallOwner->ownerId}", 
+                            $filename, 
+                            'public'
+                        );
+
+                        $stallOwner->files()->create([
+                            'attachFileType' => $file['attachFileType'] ?? null,
+                            'filePath'       => $path,
+                        ]);
+                    }
+                }
+
+                return $stallOwner->fresh();
+            });
+        } catch (Exception $e) {
+            Log::error('Failed to update Stall Owner', [
+                'error'   => $e->getMessage(),
+                'payload' => $payload
+            ]);
+
+            throw new Exception("Something went wrong while updating Stall Owner. Please try again.");
         }
-
-        if (!empty($payload['employees'])) {
-            foreach ($payload['employees'] as $employee) {
-                $stallOwner->employees()->create([
-                    'ownerId'       => $stallOwner->ownerId,
-                    'employeeName'  => $employee['employeeName'] ?? null,
-                    'dateOfBirth'   => $employee['dateOfBirth'] ?? null,
-                    'age'           => $employee['age'] ?? null,
-                    'address'       => $employee['address'] ?? null,
-                ]);
-            }
-        }
-
-        if (!empty($payload['files'])) {
-            foreach ($payload['files'] as $file) {
-                $uploadedFile = $file['filePath']; // real UploadedFile object
-                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-
-                $path = $uploadedFile->storeAs("files/{$stallOwner->ownerId}", $filename, 'public');
-
-                $stallOwner->files()->create([
-                    'attachFileType' => $file['attachFileType'] ?? null,
-                    'filePath'       => $path,
-                ]);
-            }
-        }
-
-        return $stallOwner->fresh();
     }
 
     public function findMany(object $payload)

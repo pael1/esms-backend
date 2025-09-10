@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\SyncOpController;
 use App\Http\Controllers\Api\AwardeeController;
 use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\Api\ChildrenController;
+use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ParameterController;
 
 // Route::get('/user', function (Request $request) {
@@ -38,16 +40,19 @@ Route::middleware('auth:sanctum')->group(function () {
         'ops' => OpController::class,
         'sync' => SyncOpController::class,
         'stalls' => StallController::class,
+        'employees' => EmployeeController::class,
+        'files' => FileController::class,
     ]);
 
     Route::prefix('awardees')->group(function () {
         // Route::get('/ledger/test', [AwardeeController::class, 'get_ledger']);
         Route::get('/childrens/{id}', [AwardeeController::class, 'get_childrens']);
         Route::get('/transactions/{id}', [AwardeeController::class, 'get_transactions']);
-        Route::get('/files/{id}', [AwardeeController::class, 'get_files']);
+        // Route::get('/files/{id}', [AwardeeController::class, 'get_files']);
         Route::get('/employees-data/{id}', [AwardeeController::class, 'get_employees_data']);
         Route::get('/generate/current-bill', [AwardeeController::class, 'current_billing']);
     });
+
     Route::prefix('reports')->group(function () {
         Route::get('/print/masterlist', [ReportController::class, 'masterlist_print']);
     });

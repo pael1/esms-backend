@@ -36,5 +36,6 @@ return [
     ],
 
     'pops_url' => env('POPS_API_ENDPOINT'),
+    'pops_url_staging' => env('POPS_API_ENDPOINT_STAGING'),
 
 ];

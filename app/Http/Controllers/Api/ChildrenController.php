@@ -68,6 +68,18 @@ class ChildrenController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // $deleted = $this->childrenService->delete($id);
+
+        // if ($deleted) {
+        //     return response()->json([
+        //         'message' => 'Child deleted successfully'
+        //     ]);
+        // }
+
+        // return response()->json([
+        //     'message' => 'Failed to delete child'
+        // ], 500);
+
+        return $this->childrenService->delete($id);
     }
 }
