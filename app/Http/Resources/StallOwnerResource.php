@@ -30,8 +30,18 @@ class StallOwnerResource extends JsonResource
             'attachIdPhoto' => $this->attachIdPhoto,
             'dateRegister' => $this->dateRegister,
             'contactnumber' => $this->contactnumber,
-            'childrens' => StallOwnerChildResource::collection($this->whenLoaded('childrens')),
-            'ledger' => StallOwnerAccountResource::collection($this->whenLoaded('ledger')),
+            'childrens' => StallOwnerChildResource::collection(
+                $this->whenLoaded('childrens', $this->childrens, collect())
+            ),
+            'employees' => StallOwnerEmpResource::collection(
+                $this->whenLoaded('employees', $this->employees, collect())
+            ),
+            'files' => StallOwnerFilesResource::collection(
+                $this->whenLoaded('files', $this->files, collect())
+            ),
+            'ledger' => StallOwnerAccountResource::collection(
+                $this->whenLoaded('ledger', $this->ledger, collect())
+            ),
         ];
     }
 }

@@ -20,6 +20,7 @@ use App\Http\Resources\AwardeeDetailsResource;
 use App\Http\Resources\StallOwnerChildResource;
 use App\Http\Resources\StallOwnerFilesResource;
 use App\Http\Resources\StallOwnerAccountResource;
+use App\Http\Resources\StallOwnerResource;
 use App\Interface\Service\AwardeeServiceInterface;
 use App\Interface\Repository\OpRepositoryInterface;
 use App\Interface\Repository\LedgerRepositoryInterface;
@@ -54,6 +55,13 @@ class AwardeeService implements AwardeeServiceInterface
         $awardees = $this->awardeeRepository->findMany($payload);
 
         return AwardeeListResource::collection($awardees);
+    }
+
+    public function awardeeList(object $payload)
+    {
+        $awardees = $this->awardeeRepository->awardeeList($payload);
+
+        return StallOwnerResource::collection($awardees);
     }
 
     public function find_many_childrens(object $payload)

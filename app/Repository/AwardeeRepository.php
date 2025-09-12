@@ -209,6 +209,13 @@ class AwardeeRepository implements AwardeeRepositoryInterface
                 $q->whereRaw("CONCAT(a.firstname, ' ', a.lastname) LIKE ?", ["%{$fullname}%"]);
             })
             ->orderBy('c.stallNoId', 'asc');
+        // logger($payload);
+        // $query = DB::table('stallowner as a')
+        //     ->where('a.ownerStatus', 'ACTIVE')
+        //     ->when($payload->name, function ($q) use ($payload) {
+        //         $fullname = trim(preg_replace('/\s+/', ' ', $payload->name));
+        //         $q->whereRaw("CONCAT(a.firstname, ' ', a.lastname) LIKE ?", ["%{$fullname}%"]);
+        //     });
 
         return $query->paginate(10);
     }

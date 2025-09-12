@@ -6,6 +6,8 @@ interface AwardeeServiceInterface
 {
     public function findManyAwardee(object $payload);
 
+    public function awardeeList(object $payload);
+
     public function find_many_childrens(object $payload);
 
     public function find_many_transactions(object $payload);

@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ChildrenController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ParameterController;
+use App\Http\Controllers\Api\StallOwnerController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -42,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'stalls' => StallController::class,
         'employees' => EmployeeController::class,
         'files' => FileController::class,
+        'stallowner' => StallOwnerController::class,
     ]);
 
     Route::prefix('awardees')->group(function () {

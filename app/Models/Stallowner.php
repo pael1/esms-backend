@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stallowner extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     public $timestamps = false;
 
@@ -50,5 +51,10 @@ class Stallowner extends Model
     public function files()
     {
         return $this->hasMany(StallOwnerFiles::class, 'ownerId', 'ownerId');
+    }
+
+    public function ledger()
+    {
+        return $this->hasMany(StallOwnerAccount::class, 'ownerId', 'ownerId');
     }
 }
