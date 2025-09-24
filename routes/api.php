@@ -63,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('data/arrears', 'arrears');
     });
 
-    //sync
+    //sync operations for awardees and ledgers data update from external system to local system 
     Route::prefix('sync')->controller(SyncOpController::class)->group(function () {
         Route::get('data/arrears', 'arrearsMonth');
     });
