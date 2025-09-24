@@ -13,6 +13,10 @@ class UserAccount extends Model
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+    protected $casts = [
+        'SystemUser_EmpId' => 'string',
+    ];
+
     protected $guard_name = 'api';
 
     protected $table = 'useraccount';

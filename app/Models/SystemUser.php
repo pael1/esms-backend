@@ -10,6 +10,10 @@ class SystemUser extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'EmpId' => 'string',
+    ];
+
     protected $table = 'systemuser';
 
     protected $primaryKey = 'EmpId';
