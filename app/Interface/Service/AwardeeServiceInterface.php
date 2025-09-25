@@ -20,7 +20,7 @@ interface AwardeeServiceInterface
 
     public function create(array $payload);
 
-    public function update(string $id, object $payload);
+    public function update(string $id, array $payload);
 
     public function current_billing(object $payload);
 }

@@ -63,9 +63,12 @@ class AwardeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreStallOwnerRequest $request, string $id)
     {
-        return $this->awardeeService->update($id, $request);
+        //cast as array if no $validated it was object matic
+        $validated = $request->validated();
+        
+        return $this->awardeeService->update($id, $validated);
     }
 
     /**

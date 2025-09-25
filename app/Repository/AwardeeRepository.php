@@ -110,24 +110,24 @@ class AwardeeRepository implements AwardeeRepositoryInterface
         }
     }
 
-    public function update(string $id, object $payload)
+    public function update(string $id, array $payload)
     {
         try {
             return DB::transaction(function () use ($id, $payload) {
                 // Find existing Stall Owner
                 // $stallOwner = Stallowner::findOrFail($id);
                 $stallOwner = Stallowner::where('ownerId', $id)->firstOrFail();
-
+               
                 // Profile Photo Upload
                 if (!empty($payload['attachIdPhoto'])) {
                     $uploadedFile = $payload['attachIdPhoto'];
                     $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-
-                    $payload['attachIdPhoto'] = $uploadedFile->storeAs(
+                    $path = $uploadedFile->storeAs(
                         "profile_pic/{$stallOwner->ownerId}", 
                         $filename, 
                         'public'
                     );
+                    $payload['attachIdPhoto'] = $path;
                 }
 
                 // Update Stall Owner (ignore related fields)

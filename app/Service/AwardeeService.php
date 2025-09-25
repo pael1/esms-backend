@@ -133,7 +133,7 @@ class AwardeeService implements AwardeeServiceInterface
         return $stallOwner;
     }
 
-    public function update(string $id, object $payload)
+    public function update(string $id, array $payload)
     {
         return $this->awardeeRepository->update($id, $payload);
     }
