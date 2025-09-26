@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Awardee;
+use App\Models\Stallowner;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStallOwnerRequest;
 use App\Interface\Service\AwardeeServiceInterface;
-use App\Models\Awardee;
-use Illuminate\Http\Request;
 
 class AwardeeController extends Controller
 {
@@ -41,6 +42,17 @@ class AwardeeController extends Controller
         //cast as array if no $validated it was object matic
         $validated = $request->validated();
 
+        $exists = Stallowner::where('firstname', $request->firstname)
+            ->where('lastname', $request->lastname)
+            ->where('midinit', $request->midinit)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => 'The full name already exists.'
+            ], 422);
+        }
+
         return $this->awardeeService->create($validated);
     }
 
@@ -67,7 +79,7 @@ class AwardeeController extends Controller
     {
         //cast as array if no $validated it was object matic
         $validated = $request->validated();
-        
+
         return $this->awardeeService->update($id, $validated);
     }
 
