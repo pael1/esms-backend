@@ -59,6 +59,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/print/masterlist', [ReportController::class, 'masterlist_print']);
     });
 
+    Route::prefix('stalls')->group(function () {
+        Route::get('/test/{id}', [StallController::class, 'update']);
+    });
+
     Route::prefix('ledgers')->controller(LedgerController::class)->group(function () {
         Route::get('data/arrears', 'arrears');
     });
