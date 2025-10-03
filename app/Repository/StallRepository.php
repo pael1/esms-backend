@@ -63,7 +63,6 @@ class StallRepository implements StallRepositoryInterface
     }
     public function updateStall(string $stallId, object $payload)
     {
-        logger("aw");
         $sp = Stallprofile::where('stallProfileId', $stallId)->firstOrFail();
         $sp->stallArea = $payload->area;
         $sp->StallAreaExt = $payload->area_extension;
