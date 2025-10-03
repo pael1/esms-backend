@@ -110,88 +110,87 @@ class AwardeeRepository implements AwardeeRepositoryInterface
         }
     }
 
-    public function update(string $id, array $payload)
-    {
-        try {
-            return DB::transaction(function () use ($id, $payload) {
-                // Find existing Stall Owner
-                // $stallOwner = Stallowner::findOrFail($id);
-                $stallOwner = Stallowner::where('ownerId', $id)->firstOrFail();
+    // public function update(string $id, array $payload)
+    // {
+    //     try {
+    //         return DB::transaction(function () use ($id, $payload) {
+    //             // Find existing Stall Owner
+    //             $stallOwner = Stallowner::where('ownerId', $id)->firstOrFail();
                
-                // Profile Photo Upload
-                if (!empty($payload['attachIdPhoto'])) {
-                    $uploadedFile = $payload['attachIdPhoto'];
-                    $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-                    $path = $uploadedFile->storeAs(
-                        "profile_pic/{$stallOwner->ownerId}", 
-                        $filename, 
-                        'public'
-                    );
-                    $payload['attachIdPhoto'] = $path;
-                }
+    //             // Profile Photo Upload
+    //             if (!empty($payload['attachIdPhoto'])) {
+    //                 $uploadedFile = $payload['attachIdPhoto'];
+    //                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+    //                 $path = $uploadedFile->storeAs(
+    //                     "profile_pic/{$stallOwner->ownerId}", 
+    //                     $filename, 
+    //                     'public'
+    //                 );
+    //                 $payload['attachIdPhoto'] = $path;
+    //             }
 
-                // Update Stall Owner (ignore related fields)
-                $stallOwner->update(
-                    collect($payload)->except(['children','employees','files'])->toArray()
-                );
+    //             // Update Stall Owner (ignore related fields)
+    //             $stallOwner->update(
+    //                 collect($payload)->except(['children','employees','files'])->toArray()
+    //             );
 
-                // Update Children
-                if (isset($payload['children'])) {
-                    // $stallOwner->children()->delete();
-                    foreach ($payload['children'] as $child) {
-                        $stallOwner->children()->create([
-                            'ownerId'    => $stallOwner->ownerId,
-                            'childName'  => $child['childName'] ?? null,
-                            'childBDate' => $child['childBDate'] ?? null,
-                        ]);
-                    }
-                }
+    //             // Update Children
+    //             if (isset($payload['children'])) {
+    //                 // $stallOwner->children()->delete();
+    //                 foreach ($payload['children'] as $child) {
+    //                     $stallOwner->children()->create([
+    //                         'ownerId'    => $stallOwner->ownerId,
+    //                         'childName'  => $child['childName'] ?? null,
+    //                         'childBDate' => $child['childBDate'] ?? null,
+    //                     ]);
+    //                 }
+    //             }
 
-                // Update Employees
-                if (isset($payload['employees'])) {
-                    // $stallOwner->employees()->delete();
-                    foreach ($payload['employees'] as $employee) {
-                        $stallOwner->employees()->create([
-                            'ownerId'      => $stallOwner->ownerId,
-                            'employeeName' => $employee['employeeName'] ?? null,
-                            'dateOfBirth'  => $employee['dateOfBirth'] ?? null,
-                            'age'          => $employee['age'] ?? null,
-                            'address'      => $employee['address'] ?? null,
-                        ]);
-                    }
-                }
+    //             // Update Employees
+    //             if (isset($payload['employees'])) {
+    //                 // $stallOwner->employees()->delete();
+    //                 foreach ($payload['employees'] as $employee) {
+    //                     $stallOwner->employees()->create([
+    //                         'ownerId'      => $stallOwner->ownerId,
+    //                         'employeeName' => $employee['employeeName'] ?? null,
+    //                         'dateOfBirth'  => $employee['dateOfBirth'] ?? null,
+    //                         'age'          => $employee['age'] ?? null,
+    //                         'address'      => $employee['address'] ?? null,
+    //                     ]);
+    //                 }
+    //             }
 
-                // Update Files
-                if (isset($payload['files'])) {
-                    // $stallOwner->files()->delete();
-                    foreach ($payload['files'] as $file) {
-                        $uploadedFile = $file['filePath']; // real UploadedFile object
-                        $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+    //             // Update Files
+    //             if (isset($payload['files'])) {
+    //                 // $stallOwner->files()->delete();
+    //                 foreach ($payload['files'] as $file) {
+    //                     $uploadedFile = $file['filePath']; // real UploadedFile object
+    //                     $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
-                        $path = $uploadedFile->storeAs(
-                            "files/{$stallOwner->ownerId}", 
-                            $filename, 
-                            'public'
-                        );
+    //                     $path = $uploadedFile->storeAs(
+    //                         "files/{$stallOwner->ownerId}", 
+    //                         $filename, 
+    //                         'public'
+    //                     );
 
-                        $stallOwner->files()->create([
-                            'attachFileType' => $file['attachFileType'] ?? null,
-                            'filePath'       => $path,
-                        ]);
-                    }
-                }
+    //                     $stallOwner->files()->create([
+    //                         'attachFileType' => $file['attachFileType'] ?? null,
+    //                         'filePath'       => $path,
+    //                     ]);
+    //                 }
+    //             }
 
-                return $stallOwner->fresh();
-            });
-        } catch (Exception $e) {
-            Log::error('Failed to update Stall Owner', [
-                'error'   => $e->getMessage(),
-                'payload' => $payload
-            ]);
+    //             return $stallOwner->fresh();
+    //         });
+    //     } catch (Exception $e) {
+    //         Log::error('Failed to update Stall Owner', [
+    //             'error'   => $e->getMessage(),
+    //             'payload' => $payload
+    //         ]);
 
-            throw new Exception("Something went wrong while updating Stall Owner. Please try again.");
-        }
-    }
+    //         throw new Exception("Something went wrong while updating Stall Owner. Please try again.");
+    //     }
+    // }
 
     public function findMany(object $payload)
     {

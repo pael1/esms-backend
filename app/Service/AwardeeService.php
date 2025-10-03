@@ -133,10 +133,10 @@ class AwardeeService implements AwardeeServiceInterface
         return $stallOwner;
     }
 
-    public function update(string $id, array $payload)
-    {
-        return $this->awardeeRepository->update($id, $payload);
-    }
+    // public function update(string $id, array $payload)
+    // {
+    //     return $this->awardeeRepository->update($id, $payload);
+    // }
 
     public function current_billing(object $payload)
     {

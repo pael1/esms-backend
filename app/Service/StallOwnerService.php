@@ -24,20 +24,18 @@ class StallOwnerService implements StallOwnerServiceInterface
         return StallOwnerResource::collection($stallOwner);
     }
 
-    public function create(object $payload)
+    public function create(array $payload)
     {
-        $user = $this->StallOwnerRepository->create($payload);
+        $stallOwner = $this->StallOwnerRepository->create($payload);
 
-        return StallOwnerFilesResource::make($user);
+        return $stallOwner;
     }
 
     public function show(string $id) {}
 
-    public function update(object $payload, string $id)
+    public function update(array $payload, string $id)
     {
-        $user = $this->StallOwnerRepository->update($payload, $id);
-
-        return new UserResource($user);
+        return $this->StallOwnerRepository->update($payload, $id);
     }
 
     public function delete(string $id)
