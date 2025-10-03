@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Promise\Create;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStallRequest;
+use App\Http\Requests\UpdateStallRequest;
 use App\Interface\Service\StallServiceInterface;
 
 class StallController extends Controller
@@ -47,7 +48,7 @@ class StallController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CreateStallRequest $request, string $id)
+    public function update(UpdateStallRequest $request, string $id)
     {
         return $this->stallService->updateStall($id, $request);
     }
