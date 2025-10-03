@@ -48,7 +48,7 @@ class StallController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStallRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         return $this->stallService->updateStall($id, $request);
     }
