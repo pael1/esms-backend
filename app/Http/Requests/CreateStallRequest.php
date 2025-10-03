@@ -31,6 +31,7 @@ class CreateStallRequest extends FormRequest
             'market'        => 'required|string',
             'section'        => 'required|string',
             'stall_id'        => 'required|string',
+            // 'stall_id'        => 'required|string|unique:stallprofile,stall_no_id',
             'sub_section'        => 'nullable|string',
             'type'        => 'required|string',
         ];
