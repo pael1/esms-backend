@@ -28,21 +28,9 @@ class StallRepository implements StallRepositoryInterface
         //     ->orderBy('stallprofile.stallNoId', 'asc');
 
         // return $query->paginate(10);
-
-        // $query = Stallprofile::with(['stallRental', 'stallRental.stallOwner'])
-        //         ->filter($payload->all())
-        //         ->orderBy('stallNoId', 'desc');
-
-        $query = Stallprofile::with([
-            'stallRental' => function ($q) {
-                $q->with('stallOwner');
-            },
-        ])
-        ->orderBy('stallNoId', 'desc');
-
-        if (!empty($payload->all())) {
-            $query->filter($payload->all());
-        }
+        $query = Stallprofile::with(['stallRental', 'stallRental.stallOwner'])
+                ->filter($payload->all())
+                ->orderBy('stallNoId', 'desc');
 
         return $query->paginate(10);
     }
