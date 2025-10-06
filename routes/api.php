@@ -72,6 +72,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('parameters')->controller(ParameterController::class)->group(function () {
         Route::get('sub-section/list', 'subSection');
     });
+
+    // test routes
+    Route::put('/test', function () {
+        return response()->json(['ok' => true]);
+    });
 });
 
 Route::get('/sales-data', function () {
