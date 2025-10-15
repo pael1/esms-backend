@@ -2,25 +2,26 @@
 
 namespace App\Repository;
 
-use App\Interface\Repository\StallRepositoryInterface;
+use App\Interface\Repository\RentalRepositoryInterface;
 use App\Models\Stallprofile;
+use App\Models\Stallrentaldet;
 
-class StallRepository implements StallRepositoryInterface
+class RentalRepository implements RentalRepositoryInterface
 {
-    public function findManyStalls(object $payload)
+    public function findMany(object $payload)
     {
-        $query = Stallprofile::with(['stallRental', 'stallRental.stallOwner'])
+        $query = Stallrentaldet::with(['stallProfile', 'stallOwner'])
                 ->filter($payload->all())
-                ->orderBy('stallNoId', 'desc');
+                ->orderBy('stallDetailId', 'desc');
 
         return $query->paginate(10);
     }
-    public function findStallById(string $stallId)
+    public function findById(string $id)
     {
-        $stall = Stallprofile::findOrFail($stallId);
-        return $stall;
+        $rental = Stallrentaldet::findOrFail($id);
+        return $rental;
     }
-    public function createStall(object $payload)
+    public function create(object $payload)
     {
         $sp = new Stallprofile();
         $sp->stallArea = $payload->area;
@@ -42,7 +43,7 @@ class StallRepository implements StallRepositoryInterface
 
         return $sp->fresh();
     }
-    public function updateStall(string $stallId, object $payload)
+    public function update(string $stallId, object $payload)
     {
         $sp = Stallprofile::where('stallProfileId', $stallId)->firstOrFail();
         $sp->stallArea = $payload->area;
@@ -64,7 +65,7 @@ class StallRepository implements StallRepositoryInterface
 
         return $sp->fresh();
     }
-    public function deleteStall(string $stallId)
+    public function delete(string $stallId)
     {
         // Implementation for deleting a stall
     }

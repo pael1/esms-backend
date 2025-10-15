@@ -32,6 +32,22 @@ class StallController extends Controller
      */
     public function store(CreateStallRequest $request)
     {
+        $exists = Stallprofile::where('stall_no_id', $request->stall_id)
+            ->where('stall_id_ext', $request->extension)
+            ->where('stallType', $request->type)
+            ->where('marketCode', $request->market)
+            ->whereRaw('SUBSTRING(sectionCode, 3, 2) = ?', [$request->section])
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => 'The stall number already exists.',
+                'errors' => [
+                    'Stall Number' => ['The stall number already exists.']
+                ]
+            ], 422);
+        }
+
         return $this->stallService->createStall($request);
     }
 
@@ -50,6 +66,23 @@ class StallController extends Controller
      */
     public function update(UpdateStallRequest $request, string $id)
     {
+        $exists = Stallprofile::where('stall_no_id', $request->stall_id)
+            ->where('stall_id_ext', $request->extension)
+            ->where('stallType', $request->type)
+            ->where('marketCode', $request->market)
+            ->whereRaw('SUBSTRING(sectionCode, 3, 2) = ?', [$request->section])
+            ->where('stallProfileId', '!=', $id)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => 'The stall number already exists.',
+                'errors' => [
+                    'Stall Number' => ['The stall number already exists.']
+                ]
+            ], 422);
+        }
+
         return $this->stallService->updateStall($id, $request);
     }
 

@@ -19,12 +19,6 @@ class StallOwnerRepository implements StallOwnerRepositoryInterface
 {
     public function findMany(object $payload)
     {
-        // $query = DB::table('stallowner as a')
-        //     ->where('a.ownerStatus', 'ACTIVE')
-        //     ->when($payload->name, function ($q) use ($payload) {
-        //         $fullname = trim(preg_replace('/\s+/', ' ', $payload->name));
-        //         $q->whereRaw("CONCAT(a.firstname, ' ', a.lastname) LIKE ?", ["%{$fullname}%"]);
-        //     });
         return Stallowner::with(['children', 'employees', 'files'])
             ->filter(request()->all())
             ->orderBy('stallOwnerId', 'desc')

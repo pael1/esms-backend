@@ -24,14 +24,12 @@ class CreateStallRequest extends FormRequest
         return [
             'area'    => 'required|numeric|min:1',
             'building'    => 'required|string',
-            // 'cfsi'   => 'required|string',
             'class'        => 'required|string',
             //stall id extension
             'extension'      => 'required|string',
             'market'        => 'required|string',
             'section'        => 'required|string',
             'stall_id'        => 'required|string',
-            // 'stall_id'        => 'required|string|unique:stallprofile,stall_no_id',
             'sub_section'        => 'nullable|string',
             'type'        => 'required|string',
         ];

@@ -24,15 +24,6 @@ class StallprofileFilter extends ModelFilter
         return $this->whereRaw('SUBSTRING(stallprofile.sectionCode, 3, 2) = ?', [$section]);
     }
 
-    // public function name($name)
-    // {
-    //     $fullname = trim(preg_replace('/\s+/', ' ', $name));
-
-    //     return $this->whereHas('stallRental.stallOwner', function ($query) use ($fullname) {
-    //         $query->whereRaw("CONCAT(firstname, ' ', lastname) LIKE ?", ["%{$fullname}%"]);
-    //     });
-    // }
-
     public function name($name)
     {
         return $this->where('stallNoId', 'LIKE', "%{$name}%");

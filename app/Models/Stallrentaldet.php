@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Models\Stallowner;
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stallrentaldet extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     protected $table = 'stallrentaldet';
 
@@ -43,9 +44,4 @@ class Stallrentaldet extends Model
         return $this->hasOne(Stallowner::class, 'stallOwnerId', 'STALLOWNER_stallOwnerId');
     }
 
-    //views table
-    // public function stallProfileViews()
-    // {
-    //     return $this->hasOne(StallProfileViews::class, 'stallNo', 'stallNo');
-    // }
 }

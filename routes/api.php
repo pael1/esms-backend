@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ChildrenController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ParameterController;
+use App\Http\Controllers\Api\RentalController;
 use App\Http\Controllers\Api\StallOwnerController;
 
 // Route::get('/user', function (Request $request) {
@@ -44,13 +45,12 @@ Route::middleware('auth:sanctum')->group(function () {
         'employees' => EmployeeController::class,
         'files' => FileController::class,
         'stallowner' => StallOwnerController::class,
+        'rentals' => RentalController::class,
     ]);
 
     Route::prefix('awardees')->group(function () {
-        // Route::get('/ledger/test', [AwardeeController::class, 'get_ledger']);
         Route::get('/childrens/{id}', [AwardeeController::class, 'get_childrens']);
         Route::get('/transactions/{id}', [AwardeeController::class, 'get_transactions']);
-        // Route::get('/files/{id}', [AwardeeController::class, 'get_files']);
         Route::get('/employees-data/{id}', [AwardeeController::class, 'get_employees_data']);
         Route::get('/generate/current-bill', [AwardeeController::class, 'current_billing']);
     });
