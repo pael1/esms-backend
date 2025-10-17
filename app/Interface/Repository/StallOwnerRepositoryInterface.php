@@ -6,6 +6,8 @@ interface StallOwnerRepositoryInterface
 {
     public function findMany(object $payload);
 
+    public function findOwner(string $ownerId);
+
     public function create(array $payload);
 
     public function show(string $id);

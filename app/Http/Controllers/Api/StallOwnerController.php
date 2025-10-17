@@ -26,6 +26,12 @@ class StallOwnerController extends Controller
         return $this->stallOwnerService->findMany($request);
     }
 
+    //get owner details
+    public function owner(string $ownerId)
+    {
+        return $this->stallOwnerService->findOwner($ownerId);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -67,7 +73,7 @@ class StallOwnerController extends Controller
         $exists = Stallowner::where('firstname', $request->firstname)
             ->where('lastname', $request->lastname)
             ->where('midinit', $request->midinit)
-            ->where('ownerId', '!=', $id) // 👈 exclude current record
+            ->where('ownerId', '!=', $id) // exclude current record
             ->exists();
 
         if ($exists) {

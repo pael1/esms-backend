@@ -482,7 +482,7 @@ class WebhookController extends Controller
             "29999990-20-74-2",
         ];
 
-        $callbackUrl = 'http://192.168.61.145/api/webhook/receiver';
+        $callbackUrl = 'http://192.168.61.141/api/webhook/receiver';
 
         foreach ($accountcodes as $accountcode) {
             $subscribeUrl = "http://192.168.9.150/webhook/subscribe";

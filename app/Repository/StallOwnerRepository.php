@@ -27,6 +27,12 @@ class StallOwnerRepository implements StallOwnerRepositoryInterface
         // return $query->paginate(10);
     }
 
+    public function findOwner(string $ownerId)
+    {
+        return Stallowner::where('ownerId', $ownerId)->firstOrFail();
+
+    }
+
     public function create(array $payload)
     {
         try {

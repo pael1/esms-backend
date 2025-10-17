@@ -26,6 +26,7 @@ class StallprofileFilter extends ModelFilter
 
     public function name($name)
     {
-        return $this->where('stallNoId', 'LIKE', "%{$name}%");
+        // return $this->where('stallNoId', 'LIKE', "%{$name}%");
+        return $this->where('stallNoId', $name);
     }
 }

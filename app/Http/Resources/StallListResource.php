@@ -29,6 +29,7 @@ class StallListResource extends JsonResource
         return [
             'stallProfileId' => $this->stallProfileId,
             'stallDescription' => $this->stallDescription,
+            'sectionCode' => substr($this->sectionCode, 0, 2),
             'stallNo' => $this->stallNo,
             'stallNoId' => $this->stallNoId,
             'stallArea' => $this->stallArea,

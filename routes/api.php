@@ -59,6 +59,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/print/masterlist', [ReportController::class, 'masterlist_print']);
     });
 
+    //stall owner endpoints
+    Route::prefix('stallowner')->group(function () {
+        Route::get('/{id}/details', [StallOwnerController::class, 'owner']);
+    });
+
     Route::prefix('ledgers')->controller(LedgerController::class)->group(function () {
         Route::get('data/arrears', 'arrears');
     });
