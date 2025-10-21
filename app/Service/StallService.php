@@ -25,6 +25,18 @@ class StallService implements StallServiceInterface
 
         return StallListResource::collection($stalls);
     }
+    public function findDescription(string $stallNo)
+    {
+        $stall = $this->stallRepository->findDescription($stallNo);
+
+        if (!$stall) {
+            return response()->json([
+                'message' => 'Stall not found',
+            ], 400);
+        }
+
+        return StallListResource::make($stall);
+    }
     public function findStallById(string $stallId)
     {
         $stall = $this->stallRepository->findStallById($stallId);

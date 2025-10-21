@@ -6,6 +6,8 @@ interface StallServiceInterface
 {
     public function findManyStalls(object $payload);
 
+    public function findDescription(string $stallNo);
+
     public function findStallById(string $stallId);
 
     public function createStall(object $data);

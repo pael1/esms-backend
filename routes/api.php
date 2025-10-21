@@ -17,15 +17,11 @@ use App\Http\Controllers\Api\ParameterController;
 use App\Http\Controllers\Api\RentalController;
 use App\Http\Controllers\Api\StallOwnerController;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
-//webhook
+//webhook routes
 Route::post('/webhook/receiver', [WebhookController::class, 'receiver']);
 Route::post('/webhook/subscribe', [WebhookController::class, 'subscribe']);
 
-
+// auth routes
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [Authcontroller::class, 'logout'])->middleware('auth:sanctum');
@@ -48,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'rentals' => RentalController::class,
     ]);
 
+    // awardee endpoints
     Route::prefix('awardees')->group(function () {
         Route::get('/childrens/{id}', [AwardeeController::class, 'get_childrens']);
         Route::get('/transactions/{id}', [AwardeeController::class, 'get_transactions']);
@@ -55,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/generate/current-bill', [AwardeeController::class, 'current_billing']);
     });
 
+    // reports endpoints
     Route::prefix('reports')->group(function () {
         Route::get('/print/masterlist', [ReportController::class, 'masterlist_print']);
     });
@@ -64,6 +62,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}/details', [StallOwnerController::class, 'owner']);
     });
 
+    //stalls endpoints
+    Route::prefix('stalls')->group(function () {
+        Route::get('/{id}/description', [StallController::class, 'description']);
+    });
+
+    //ledgers endpoints
     Route::prefix('ledgers')->controller(LedgerController::class)->group(function () {
         Route::get('data/arrears', 'arrears');
     });
@@ -73,7 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('data/arrears', 'arrearsMonth');
     });
 
-    //parameters
+    //parameters endpoints
     Route::prefix('parameters')->controller(ParameterController::class)->group(function () {
         Route::get('sub-section/list', 'subSection');
     });
@@ -83,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::put('/test', function () {
     return response()->json(['ok' => true]);
 });
-
+// test routes for sales data dashboard
 Route::get('/sales-data', function () {
     return response()->json([
         'categories' => ['Jan', 'Feb', 'Mar', 'Apr'],

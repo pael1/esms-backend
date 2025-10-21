@@ -28,6 +28,14 @@ class StallController extends Controller
     }
 
     /**
+     * Display available stalls.
+     */
+    public function description(string $id)
+    {
+        return $this->stallService->findDescription($id);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(CreateStallRequest $request)

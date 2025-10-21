@@ -8,9 +8,9 @@ interface RentalServiceInterface
 
     public function findById(string $id);
 
-    public function create(object $payload);
+    public function create(array $payload);
 
-    public function update(string $stallId, object $payload);
+    public function update(string $stallId, array $payload);
 
     public function delete(string $id);
 }

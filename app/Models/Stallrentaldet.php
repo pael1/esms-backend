@@ -11,13 +11,15 @@ class Stallrentaldet extends Model
 {
     use HasFactory, Filterable;
 
+    public $timestamps = false;
+
     protected $table = 'stallrentaldet';
 
     protected $primaryKey = 'stallDetailId';
 
     protected $fillable = [
         'stallDetailId',
-        'ownerId ',
+        'ownerId',
         'stallNo',
         'rentalStatus',
         'contractStartDate',
@@ -29,8 +31,8 @@ class Stallrentaldet extends Model
         'capital',
         'lineOfBusiness',
         'STALLOWNER_stallOwnerId',
-        'leaseContract ',
-        'documentFiles ',
+        'leaseContract',
+        'documentFiles',
         'busIDStatus',
     ];
 
@@ -41,7 +43,7 @@ class Stallrentaldet extends Model
 
     public function stallOwner()
     {
-        return $this->hasOne(Stallowner::class, 'stallOwnerId', 'STALLOWNER_stallOwnerId');
+        return $this->belongsTo(Stallowner::class, 'STALLOWNER_stallOwnerId', 'stallOwnerId');
     }
 
 }

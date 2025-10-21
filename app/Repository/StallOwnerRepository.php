@@ -29,7 +29,7 @@ class StallOwnerRepository implements StallOwnerRepositoryInterface
 
     public function findOwner(string $ownerId)
     {
-        return Stallowner::where('ownerId', $ownerId)->firstOrFail();
+        return Stallowner::where('ownerId', $ownerId)->first();
 
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateRentalRequest;
 use App\Interface\Service\RentalServiceInterface;
 use Illuminate\Http\Request;
 
@@ -26,9 +27,11 @@ class RentalController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateRentalRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+        
+        return $this->rentalService->create($validatedData);
     }
 
     /**

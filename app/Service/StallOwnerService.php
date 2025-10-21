@@ -28,6 +28,12 @@ class StallOwnerService implements StallOwnerServiceInterface
     {
         $stallOwner = $this->StallOwnerRepository->findOwner($ownerId);
 
+        if (!$stallOwner) {
+            return response()->json([
+                'message' => 'Stall Owner not found',
+            ], 400);
+        }
+
         return StallOwnerResource::make($stallOwner);
     }
 
