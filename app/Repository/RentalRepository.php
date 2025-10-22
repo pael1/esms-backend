@@ -45,27 +45,12 @@ class RentalRepository implements RentalRepositoryInterface
 
         return $rental->fresh();
     }
-    public function update(string $stallId, array $payload)
+    public function update(string $rentalId, array $payload)
     {
-        // $sp = Stallprofile::where('stallProfileId', $stallId)->firstOrFail();
-        // $sp->stallArea = $payload->area;
-        // $sp->StallAreaExt = $payload->area_extension;
-        // $sp->stallNo = $payload->stallNo;
-        // $sp->CFSI = $payload->cfsi;
-        // $sp->stallClass = $payload->class;
-        // $sp->stallDescription = $payload->stallDescription;
-        // $sp->marketCode = $payload->market;
-        // $sp->sectionCode = $payload->sectionCode;
-        // $sp->stallNoId = $payload->stallNoId;
-        // $sp->stallType = $payload->type;
-        // $sp->section_id = $payload->section;
-        // $sp->sub_section_id = $payload->sub_section;
-        // $sp->building_id = $payload->building;
-        // $sp->stall_id_ext = $payload->extension;
-        // $sp->stall_no_id = $payload->stall_id;
-        // $sp->save();
-
-        // return $sp->fresh();
+        $rental = Stallrentaldet::findOrFail($rentalId);
+        $rental->update($payload);
+        
+        return $rental->fresh();
     }
     public function delete(string $stallId)
     {

@@ -34,9 +34,10 @@ class RentalService implements RentalServiceInterface
 
         return StallRentalDetResource::make($rental);
     }
-    public function update(string $stallId, array $payload)
+    public function update(string $rentalId, array $payload)
     {
-        
+        $rental = $this->rentalRepository->update($rentalId, $payload);
+        return StallRentalDetResource::make($rental);
     }
     public function delete(string $stallId)
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateRentalRequest;
+use App\Http\Requests\UpdateRentalRequest;
 use App\Interface\Service\RentalServiceInterface;
 use Illuminate\Http\Request;
 
@@ -45,9 +46,11 @@ class RentalController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRentalRequest $request, string $id)
     {
-        //
+        $validatedData = $request->validated();
+
+        return $this->rentalService->update($id, $validatedData);
     }
 
     /**
