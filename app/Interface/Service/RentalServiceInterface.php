@@ -13,4 +13,6 @@ interface RentalServiceInterface
     public function update(string $stallId, array $payload);
 
     public function delete(string $id);
+
+    public function cancelRental(string $id);
 }

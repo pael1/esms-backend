@@ -3,18 +3,21 @@
 namespace App\Service;
 
 use App\Http\Resources\UserResource;
-use App\Http\Resources\StallOwnerFilesResource;
 use App\Http\Resources\StallOwnerResource;
+use App\Http\Resources\StallOwnerFilesResource;
 use App\Interface\Service\StallOwnerServiceInterface;
+use App\Interface\Repository\RentalRepositoryInterface;
 use App\Interface\Repository\StallOwnerRepositoryInterface;
 
 class StallOwnerService implements StallOwnerServiceInterface
 {
     private $StallOwnerRepository;
+    private $RentalRepository;
 
-    public function __construct(StallOwnerRepositoryInterface $StallOwnerRepository)
+    public function __construct(StallOwnerRepositoryInterface $StallOwnerRepository, RentalRepositoryInterface $rentalRepository)
     {
         $this->StallOwnerRepository = $StallOwnerRepository;
+        $this->RentalRepository = $rentalRepository;
     }
 
     public function findMany(object $payload)
@@ -24,7 +27,7 @@ class StallOwnerService implements StallOwnerServiceInterface
         return StallOwnerResource::collection($stallOwner);
     }
 
-    public function findOwner(string $ownerId)
+    public function findOwner(string $ownerId, string $renalId)
     {
         $stallOwner = $this->StallOwnerRepository->findOwner($ownerId);
 
@@ -32,6 +35,23 @@ class StallOwnerService implements StallOwnerServiceInterface
             return response()->json([
                 'message' => 'Stall Owner not found',
             ], 400);
+        }
+
+        //check if the owner already has rental record
+        //view/edit rental record
+        if($renalId){
+            $rental = $this->RentalRepository->findById($renalId);
+            if($rental->ownerId !== $ownerId && $stallOwner->stallRentalDet){
+                return response()->json([
+                    'message' => 'Stall Owner already has a rental record',
+                ], 400);
+            }
+        } else { //new rental record
+            if ($stallOwner->stallRentalDet) {
+                return response()->json([
+                    'message' => 'Stall Owner already has a rental record',
+                ], 400);
+            }
         }
 
         return StallOwnerResource::make($stallOwner);

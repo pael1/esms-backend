@@ -59,12 +59,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //stall owner endpoints
     Route::prefix('stallowner')->group(function () {
-        Route::get('/{id}/details', [StallOwnerController::class, 'owner']);
+        Route::get('/{id}/details/{rentalId}', [StallOwnerController::class, 'owner']);
     });
 
     //stalls endpoints
     Route::prefix('stalls')->group(function () {
-        Route::get('/{id}/description', [StallController::class, 'description']);
+        Route::get('/{id}/description/{rentalId}', [StallController::class, 'description']);
+    });
+
+    //rentals endpoints
+    Route::prefix('rentals')->group(function () {
+        Route::put('/cancel/{id}', [RentalController::class, 'cancelRental']);
     });
 
     //ledgers endpoints

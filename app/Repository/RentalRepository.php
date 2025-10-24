@@ -2,10 +2,11 @@
 
 namespace App\Repository;
 
-use App\Interface\Repository\RentalRepositoryInterface;
 use App\Models\Stallowner;
 use App\Models\Stallprofile;
 use App\Models\Stallrentaldet;
+use Illuminate\Support\Facades\DB;
+use App\Interface\Repository\RentalRepositoryInterface;
 
 class RentalRepository implements RentalRepositoryInterface
 {
@@ -24,30 +25,45 @@ class RentalRepository implements RentalRepositoryInterface
     }
     public function create(array $payload)
     {
-        // Find the Stall Owner based on the ownerId from payload
-        $owner = Stallowner::where('ownerId', $payload['ownerId'])->first();
+        return DB::transaction(function () use ($payload) {
+            $owner = Stallowner::where('ownerId', $payload['ownerId'])->first();
 
-        if (!$owner) {
-            return response()->json([
-                'message' => 'The specified stall owner does not exist.',
-                'errors' => [
-                    'ownerId' => ['Invalid or missing owner ID.']
-                ]
-            ], 422);
-        }
+            if (!$owner) {
+                throw new \Exception('The specified stall owner does not exist.');
+            }
 
-        // Add the foreign key for stall owner
-        $payload['STALLOWNER_stallOwnerId'] = $owner->stallOwnerId;
-        $payload['rentalStatus'] = "active";
+            // Add the foreign key for stall owner
+            $payload['STALLOWNER_stallOwnerId'] = $owner->stallOwnerId;
+            $payload['rentalStatus'] = 'active';
 
-        // Create the rental record
-        $rental = Stallrentaldet::create($payload);
+            // Create the rental record
+            $rental = Stallrentaldet::create($payload);
 
-        return $rental->fresh();
+            // Update the stall status
+            Stallprofile::where('stallNo', $payload['stallNo'])
+                ->update(['stallStatus' => 'REN']);
+
+            return $rental->fresh();
+        });
     }
     public function update(string $rentalId, array $payload)
     {
         $rental = Stallrentaldet::findOrFail($rentalId);
+        $owner = Stallowner::where('ownerId', $payload['ownerId'])->first();
+
+        // Add the foreign key for stall owner
+        $payload['STALLOWNER_stallOwnerId'] = $owner->stallOwnerId;
+
+        //change previous stall status to null if stallNo is changed
+        if($rental->stallNo != $payload['stallNo']){
+            Stallprofile::where('stallNo', $rental->stallNo)
+                ->update(['stallStatus' => null]);
+            
+            //update new stall status to REN
+            Stallprofile::where('stallNo', $payload['stallNo'])
+                ->update(['stallStatus' => 'REN']);
+        }
+
         $rental->update($payload);
         
         return $rental->fresh();
@@ -55,5 +71,24 @@ class RentalRepository implements RentalRepositoryInterface
     public function delete(string $stallId)
     {
         // Implementation for deleting a stall
+    }
+
+    //cancel rental
+    public function cancelRental(string $id)
+    {
+            return DB::transaction(function () use ($id) {
+                // Find the rental record
+                $rental = Stallrentaldet::findOrFail($id);
+
+                // Update rental status
+                $rental->update(['rentalStatus' => 'cancel']);
+
+                // Update corresponding stall status
+                Stallprofile::where('stallNo', $rental->stallNo)
+                    ->update(['stallStatus' => null]);
+
+                // Return the updated rental with fresh data
+                return $rental->fresh();
+            });
     }
 }

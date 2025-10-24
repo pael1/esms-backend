@@ -60,4 +60,10 @@ class RentalController extends Controller
     {
         //
     }
+
+    //cancel rental
+    public function cancelRental(string $id)
+    {
+        return $this->rentalService->cancelRental($id);
+    }
 }

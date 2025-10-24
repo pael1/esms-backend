@@ -31,7 +31,7 @@ class StallRentalDetResource extends JsonResource
             'leaseContract' => $this->leaseContract,
             'documentFiles' => $this->documentFiles,
             'busIDStatus' => $this->busIDStatus,
-            'stallProfile' => new StallProfileResource($this->whenLoaded('stallProfile')),
+            'stallProfile' => StallProfileResource::make($this->whenLoaded('stallProfile')),
             'stallOwner' => StallOwnerResource::make($this->whenLoaded('stallOwner')),
         ];
     }

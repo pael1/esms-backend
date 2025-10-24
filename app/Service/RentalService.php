@@ -43,4 +43,11 @@ class RentalService implements RentalServiceInterface
     {
         return $this->rentalRepository->delete($stallId);
     }
+
+    //cancel rental
+    public function cancelRental(string $id)
+    {
+        $rental = $this->rentalRepository->cancelRental($id);
+        return StallRentalDetResource::make($rental);
+    }
 }

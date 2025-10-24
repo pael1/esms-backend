@@ -8,16 +8,19 @@ use App\Http\Resources\StallProfileResource;
 use App\Interface\Service\StallServiceInterface;
 use App\Interface\Repository\StallRepositoryInterface;
 use App\Interface\Repository\ParameterRepositoryInterface;
+use App\Interface\Service\RentalServiceInterface;
 
 class StallService implements StallServiceInterface
 {
     private $stallRepository;
     private $parameterRepository;
+    private $rentalRepository;
 
-    public function __construct(StallRepositoryInterface $stallRepository, ParameterRepositoryInterface $parameterRepository)
+    public function __construct(StallRepositoryInterface $stallRepository, ParameterRepositoryInterface $parameterRepository, RentalServiceInterface $rentalRepository)
     {
         $this->stallRepository = $stallRepository;
         $this->parameterRepository = $parameterRepository;
+        $this->rentalRepository = $rentalRepository;
     }
     public function findManyStalls(object $payload)
     {
@@ -25,7 +28,7 @@ class StallService implements StallServiceInterface
 
         return StallListResource::collection($stalls);
     }
-    public function findDescription(string $stallNo)
+    public function findDescription(string $stallNo, string $renalId)
     {
         $stall = $this->stallRepository->findDescription($stallNo);
 
@@ -33,6 +36,23 @@ class StallService implements StallServiceInterface
             return response()->json([
                 'message' => 'Stall not found',
             ], 400);
+        }
+
+        //check if the stall is already rented by other owner
+        //view/edit rental record
+        if($renalId){
+            $rental = $this->rentalRepository->findById($renalId);
+            if($rental->stallNo !== $stallNo && $stall->stallStatus === 'REN'){
+                return response()->json([
+                    'message' => 'Stall has already been rented',
+                ], 400);
+            }
+        } else { //new rental record
+            if ($stall->stallStatus === 'REN') {
+                return response()->json([
+                    'message' => 'Stall has already been rented',
+                ], 400);
+            }
         }
 
         return StallListResource::make($stall);

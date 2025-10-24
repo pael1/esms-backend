@@ -35,7 +35,9 @@ class Stallowner extends Model
 
     public function stallRentalDet()
     {
-        return $this->hasOne(Stallrentaldet::class, 'ownerId', 'ownerId');
+        // return $this->hasOne(Stallrentaldet::class, 'ownerId', 'ownerId');
+        return $this->hasOne(Stallrentaldet::class, 'ownerId', 'ownerId')
+                ->where('rentalStatus', 'active');
     }
 
     public function children()

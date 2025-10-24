@@ -27,9 +27,9 @@ class StallOwnerController extends Controller
     }
 
     //get owner details
-    public function owner(string $ownerId)
+    public function owner(string $ownerId, string $renalId)
     {
-        return $this->stallOwnerService->findOwner($ownerId);
+        return $this->stallOwnerService->findOwner($ownerId, $renalId);
     }
 
     /**

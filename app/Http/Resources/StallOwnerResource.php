@@ -42,6 +42,9 @@ class StallOwnerResource extends JsonResource
             'ledger' => StallOwnerAccountResource::collection(
                 $this->whenLoaded('ledger', $this->ledger, collect())
             ),
+            'stallRentalDet' => StallRentalDetResource::make(
+                $this->whenLoaded('stallRentalDet', $this->stallRentalDet)
+            ),
         ];
     }
 }

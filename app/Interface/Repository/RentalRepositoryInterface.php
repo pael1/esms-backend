@@ -12,4 +12,6 @@ interface RentalRepositoryInterface
     public function update(string $id, array $payload);
 
     public function delete(string $id);
+
+    public function cancelRental(string $id);
 }

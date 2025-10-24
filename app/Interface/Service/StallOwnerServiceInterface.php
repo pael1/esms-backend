@@ -6,7 +6,7 @@ interface StallOwnerServiceInterface
 {
     public function findMany(object $payload);
 
-    public function findOwner(string $ownerId);
+    public function findOwner(string $ownerId, string $renalId);
 
     public function create(array $payload);
 

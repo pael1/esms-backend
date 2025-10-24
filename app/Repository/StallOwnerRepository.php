@@ -29,7 +29,9 @@ class StallOwnerRepository implements StallOwnerRepositoryInterface
 
     public function findOwner(string $ownerId)
     {
-        return Stallowner::where('ownerId', $ownerId)->first();
+        return Stallowner::with('stallRentalDet')
+        ->where('ownerId', $ownerId)
+        ->first();
 
     }
 

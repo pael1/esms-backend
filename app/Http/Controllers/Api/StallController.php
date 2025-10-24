@@ -30,9 +30,9 @@ class StallController extends Controller
     /**
      * Display available stalls.
      */
-    public function description(string $id)
+    public function description(string $id, string $renalId)
     {
-        return $this->stallService->findDescription($id);
+        return $this->stallService->findDescription($id, $renalId);
     }
 
     /**

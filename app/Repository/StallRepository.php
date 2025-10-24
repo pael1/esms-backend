@@ -18,7 +18,7 @@ class StallRepository implements StallRepositoryInterface
     public function findDescription(string $stallNo)
     {
         return Stallprofile::where('stallNo', $stallNo)
-        ->select('stallDescription')
+        ->select(['stallDescription', 'stallStatus', 'stallNo'])
         ->first();
     }
     public function findStallById(string $stallId)
