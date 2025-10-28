@@ -32,7 +32,7 @@ class StallService implements StallServiceInterface
     public function findStall(object $payload)
     {
         $stall = $this->stallRepository->findStall($payload);
-
+        logger($stall);
         return StallProfileOnlyResource::collection($stall);
     }
 

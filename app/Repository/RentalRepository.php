@@ -20,7 +20,7 @@ class RentalRepository implements RentalRepositoryInterface
     }
     public function findById(string $id)
     {
-        $rental = Stallrentaldet::findOrFail($id);
+        $rental = Stallrentaldet::with(['stallProfile', 'stallOwner'])->findOrFail($id);
         return $rental;
     }
     public function create(array $payload)

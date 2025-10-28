@@ -155,8 +155,8 @@ class Stallprofile extends Model
      */
     public function getBaseRatesAttribute()
     {
-        $stallRate = $this->getAttribute('stallRate');
-        $totalInfluenceRate = $this->getAttribute('Total_InfluenceRate');
+        $stallRate = (float) $this->getAttribute('stallRate');
+        $totalInfluenceRate = (float) $this->getAttribute('Total_InfluenceRate');
 
         return number_format($totalInfluenceRate + $stallRate, 2);
     }
@@ -166,8 +166,7 @@ class Stallprofile extends Model
      */
     public function getExtensionRateAttribute()
     {
-        $baseRates = $this->getAttribute('baseRates');
-
+        $baseRates = (float) $this->getAttribute('baseRates');
         return number_format($baseRates * 0.2, 2);
     }
 
@@ -176,8 +175,7 @@ class Stallprofile extends Model
      */
     public function getTotalExtensionRateAttribute()
     {
-        $extensionRate = $this->getAttribute('extensionRate');
-        
+        $extensionRate = (float) $this->getAttribute('extensionRate');
         return number_format($extensionRate * $this->StallAreaExt, 2);
     }
 
@@ -186,8 +184,7 @@ class Stallprofile extends Model
      */
     public function getTotalBaseRateAttribute()
     {
-        $baseRates = $this->getAttribute('baseRates');
-
+        $baseRates = (float) $this->getAttribute('baseRates');
         return number_format($baseRates * $this->stallArea, 2);
     }
 
@@ -196,8 +193,11 @@ class Stallprofile extends Model
      */
     public function getTotalRatePerDayAttribute()
     {
-        $totalBaseRate = $this->getAttribute('Total_baseRate');
-        $totalExtensionRate = $this->getAttribute('Total_extensionRate');
+        $totalBaseRate = (float) $this->getAttribute('Total_baseRate');
+        $totalExtensionRate = (float) $this->getAttribute('Total_extensionRate');
+        logger($this->stallProfileId);
+        logger($totalBaseRate);
+        logger($totalExtensionRate);
 
         return number_format($totalBaseRate + $totalExtensionRate, 2);
     }
