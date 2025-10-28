@@ -28,6 +28,22 @@ class StallController extends Controller
     }
 
     /**
+     * show stall description.
+     */
+    public function findStall(Request $request)
+    {
+        return $this->stallService->findStall($request);
+    }
+
+    /**
+     * show stall number id.
+     */
+    public function findStallNoId(Request $request)
+    {
+        return $this->stallService->findStallNoId($request);
+    }
+
+    /**
      * Display available stalls.
      */
     public function description(string $id, string $renalId)

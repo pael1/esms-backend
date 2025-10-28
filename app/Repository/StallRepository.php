@@ -15,6 +15,26 @@ class StallRepository implements StallRepositoryInterface
 
         return $query->paginate(10);
     }
+
+    public function findStall(object $payload)
+    {
+        $query = Stallprofile::whereNull('stallStatus')
+        ->filter($payload->all())
+        ->groupBy('sectionCode')
+        ->orderBy('stallProfileId', 'desc');
+
+        return $query->get();
+    }
+
+    public function findStallNoId(object $payload)
+    {
+        $query = Stallprofile::whereNull('stallStatus')
+        ->filter($payload->all())
+        ->orderBy('stallProfileId', 'desc');
+
+        return $query->get();
+    }
+
     public function findDescription(string $stallNo)
     {
         return Stallprofile::where('stallNo', $stallNo)

@@ -35,6 +35,15 @@ class StallOwnerRepository implements StallOwnerRepositoryInterface
 
     }
 
+    public function findOwnerName(string $query)
+    {
+       return Stallowner::where('rental_status', 'available')
+            ->whereRaw("CONCAT(firstname, ' ', COALESCE(midinit, ''), ' ', lastname) LIKE ?", ["%{$query}%"])
+            ->limit(10)
+            ->get();
+
+    }
+
     public function create(array $payload)
     {
         try {
@@ -45,6 +54,7 @@ class StallOwnerRepository implements StallOwnerRepositoryInterface
                 $payload['ownerId']      = str_pad($nextOwnerId, 8, '0', STR_PAD_LEFT);
                 $payload['ownerStatus']  = "ACTIVE";
                 $payload['dateRegister'] = now();
+                $payload['rental_status'] = "available";
                 
                 // Profile Photo Upload
                 if (!empty($payload['attachIdPhoto'])) {

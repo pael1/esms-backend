@@ -43,6 +43,9 @@ class RentalRepository implements RentalRepositoryInterface
             Stallprofile::where('stallNo', $payload['stallNo'])
                 ->update(['stallStatus' => 'REN']);
 
+            // Update the stall owner's rental status
+            $owner->update(['rental_status' => 'rented']);
+
             return $rental->fresh();
         });
     }
@@ -62,6 +65,15 @@ class RentalRepository implements RentalRepositoryInterface
             //update new stall status to REN
             Stallprofile::where('stallNo', $payload['stallNo'])
                 ->update(['stallStatus' => 'REN']);
+        }
+
+        if($rental->ownerId != $payload['ownerId']){
+            //update previous owner rental status to null
+            $previousOwner =Stallowner::where('ownerId', $rental->ownerId)->first();
+            $previousOwner->update(['rental_status' => "available"]);
+
+            //update new owner rental status to rented
+            $owner->update(['rental_status' => 'rented']);
         }
 
         $rental->update($payload);

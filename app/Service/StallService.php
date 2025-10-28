@@ -28,6 +28,21 @@ class StallService implements StallServiceInterface
 
         return StallListResource::collection($stalls);
     }
+
+    public function findStall(object $payload)
+    {
+        $stall = $this->stallRepository->findStall($payload);
+
+        return StallProfileOnlyResource::collection($stall);
+    }
+
+    public function findStallNoId(object $payload)
+    {
+        $stall = $this->stallRepository->findStallNoId($payload);
+
+        return StallProfileOnlyResource::collection($stall);
+    }
+
     public function findDescription(string $stallNo, string $renalId)
     {
         $stall = $this->stallRepository->findDescription($stallNo);

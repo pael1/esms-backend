@@ -33,6 +33,14 @@ class StallOwnerController extends Controller
     }
 
     /**
+     * get owner names
+     */
+    public function ownerNames(string $searchName)
+    {
+        return $this->stallOwnerService->findOwnerName($searchName);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreStallOwnerRequest $request)

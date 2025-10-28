@@ -5,6 +5,10 @@ interface StallRepositoryInterface
 {
     public function findManyStalls(object $payload);
 
+    public function findStall(object $payload);
+
+    public function findStallNoId(object $payload);
+
     public function findDescription(string $stallNo);
 
     public function findStallById(string $stallId);

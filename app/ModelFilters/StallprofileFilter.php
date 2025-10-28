@@ -24,6 +24,12 @@ class StallprofileFilter extends ModelFilter
         return $this->whereRaw('SUBSTRING(stallprofile.sectionCode, 3, 2) = ?', [$section]);
     }
 
+    //section code filter with building and sub section format
+    public function sectioncode($section)
+    {
+        return $this->where('stallprofile.sectionCode', [$section]);
+    }
+
     public function name($name)
     {
         // return $this->where('stallNoId', 'LIKE', "%{$name}%");

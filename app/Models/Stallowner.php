@@ -31,6 +31,7 @@ class Stallowner extends Model
         'attachIdPhoto',
         'dateRegister',
         'contactnumber',
+        'rental_status',
     ];
 
     public function stallRentalDet()

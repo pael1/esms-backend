@@ -8,6 +8,8 @@ interface StallOwnerServiceInterface
 
     public function findOwner(string $ownerId, string $renalId);
 
+    public function findOwnerName(string $query);
+
     public function create(array $payload);
 
     public function show(string $id);

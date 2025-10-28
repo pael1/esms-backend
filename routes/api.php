@@ -60,11 +60,14 @@ Route::middleware('auth:sanctum')->group(function () {
     //stall owner endpoints
     Route::prefix('stallowner')->group(function () {
         Route::get('/{id}/details/{rentalId}', [StallOwnerController::class, 'owner']);
+        Route::get('/{searchName}/names', [StallOwnerController::class, 'ownerNames']);
     });
 
     //stalls endpoints
     Route::prefix('stalls')->group(function () {
         Route::get('/{id}/description/{rentalId}', [StallController::class, 'description']);
+        Route::get('/find-stall/description', [StallController::class, 'findStall']);
+        Route::get('/find-stall/stall-no-id', [StallController::class, 'findStallNoId']);
     });
 
     //rentals endpoints

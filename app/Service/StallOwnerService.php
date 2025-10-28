@@ -57,6 +57,13 @@ class StallOwnerService implements StallOwnerServiceInterface
         return StallOwnerResource::make($stallOwner);
     }
 
+    public function findOwnerName(string $query)
+    {
+        $names = $this->StallOwnerRepository->findOwnerName($query);
+
+        return StallOwnerResource::collection($names);
+    }
+
     public function create(array $payload)
     {
         $stallOwner = $this->StallOwnerRepository->create($payload);
