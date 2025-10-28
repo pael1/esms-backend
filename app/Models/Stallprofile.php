@@ -167,6 +167,7 @@ class Stallprofile extends Model
     public function getExtensionRateAttribute()
     {
         $baseRates = (float) $this->getAttribute('baseRates');
+
         return number_format($baseRates * 0.2, 2);
     }
 
@@ -176,7 +177,8 @@ class Stallprofile extends Model
     public function getTotalExtensionRateAttribute()
     {
         $extensionRate = (float) $this->getAttribute('extensionRate');
-        return number_format($extensionRate * $this->StallAreaExt, 2);
+
+        return number_format($extensionRate * floatval($this->StallAreaExt), 2);
     }
 
     /**
@@ -184,8 +186,9 @@ class Stallprofile extends Model
      */
     public function getTotalBaseRateAttribute()
     {
-        $baseRates = (float) $this->getAttribute('baseRates');
-        return number_format($baseRates * $this->stallArea, 2);
+        $baseRates = floatval($this->getAttribute('baseRates'));
+
+        return $baseRates * floatval($this->stallArea);
     }
 
     /**
@@ -193,11 +196,8 @@ class Stallprofile extends Model
      */
     public function getTotalRatePerDayAttribute()
     {
-        $totalBaseRate = (float) $this->getAttribute('Total_baseRate');
-        $totalExtensionRate = (float) $this->getAttribute('Total_extensionRate');
-        logger($this->stallProfileId);
-        logger($totalBaseRate);
-        logger($totalExtensionRate);
+        $totalBaseRate = (float) $this->getAttribute('totalBaseRate');
+        $totalExtensionRate = (float) $this->getAttribute('totalExtensionRate');
 
         return number_format($totalBaseRate + $totalExtensionRate, 2);
     }
