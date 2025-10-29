@@ -98,9 +98,12 @@ Route::put('/test', function () {
 // test routes for sales data dashboard
 Route::get('/sales-data', function () {
     return response()->json([
-        'categories' => ['Jan', 'Feb', 'Mar', 'Apr'],
+        'categories' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         'series' => [
-            ['name' => 'Sales', 'data' => [120, 200, 150, 300]],
+            ['name' => 'Sales', 'data' => [120, 200, 150, 300, 400, 250, 350, 270, 310, 280, 220, 330]],
         ],
+        'total_payments' => 84500,
+        'total_ops_cards' => 127,
+        'utilization' => [75, 60, 85, 70, 90, 80, 75, 60, 85, 70, 90, 80],
     ]);
 });
