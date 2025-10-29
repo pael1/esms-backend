@@ -26,7 +26,7 @@ class UpdateStallRequest extends FormRequest
             'building'    => 'required|string',
             'class'        => 'required|string',
             //stall id extension
-            'extension'      => 'required|string',
+            // 'extension'      => 'required|string',
             'market'        => 'required|string',
             'section'        => 'required|string',
             'stall_id'        => 'required|string',
