@@ -30,6 +30,7 @@ class StallOwnerResource extends JsonResource
             'attachIdPhoto' => $this->attachIdPhoto,
             'dateRegister' => $this->dateRegister,
             'contactnumber' => $this->contactnumber,
+            'rental_status' => $this->rental_status,
             'childrens' => StallOwnerChildResource::collection(
                 $this->whenLoaded('childrens', $this->childrens, collect())
             ),

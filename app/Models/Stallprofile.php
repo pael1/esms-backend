@@ -198,6 +198,9 @@ class Stallprofile extends Model
     {
         $totalBaseRate = (float) $this->getAttribute('totalBaseRate');
         $totalExtensionRate = (float) $this->getAttribute('totalExtensionRate');
+        logger($this->stallProfileId);
+        logger("Total Base Rate: $totalBaseRate, Total Extension Rate: $totalExtensionRate");
+        logger(number_format($totalBaseRate + $totalExtensionRate, 2));
 
         return number_format($totalBaseRate + $totalExtensionRate, 2);
     }

@@ -24,7 +24,6 @@ class UpdateStallRequest extends FormRequest
         return [
             'area'    => 'required|numeric|min:1',
             'building'    => 'required|string',
-            'cfsi'   => 'required|string',
             'class'        => 'required|string',
             //stall id extension
             'extension'      => 'required|string',
