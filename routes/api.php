@@ -72,7 +72,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //rentals endpoints
     Route::prefix('rentals')->group(function () {
-        Route::put('/cancel/{id}', [RentalController::class, 'cancelRental']);
+        // Route::put('/cancel/{id}', [RentalController::class, 'cancelRental']);
+        Route::patch('/cancel/{id}', [RentalController::class, 'cancelRental']);
     });
 
     //ledgers endpoints
