@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OpController;
 use App\Http\Controllers\Api\AuthController;
@@ -94,6 +95,11 @@ Route::middleware('auth:sanctum')->group(function () {
     //parameters endpoints
     Route::prefix('parameters')->controller(ParameterController::class)->group(function () {
         Route::get('sub-section/list', 'subSection');
+    });
+
+    //dashboard endpoints
+    Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
+        Route::get('total', 'allTotal');
     });
 });
 

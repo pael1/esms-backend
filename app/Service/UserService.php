@@ -35,14 +35,14 @@ class UserService implements UserServiceInterface
         return UserResource::make($user);
     }
 
-    public function findUserByEmail(string $email)
-    {
+    // public function findUserByEmail(string $email)
+    // {
 
-        $user = $this->userRepository->findByEmail($email);
+    //     $user = $this->userRepository->findByEmail($email);
 
-        // return UserResource::collection($user); // for multiple data
-        return new UserResource($user); //for only 1 data
-    }
+    //     // return UserResource::collection($user); // for multiple data
+    //     return new UserResource($user); //for only 1 data
+    // }
 
     public function createUser(array $payload)
     {
