@@ -24,7 +24,9 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        return $this->userService->createUser($request);
+        $validatedData = $request->validated();
+
+        return $this->userService->createUser($validatedData);
     }
 
     public function show(string $id)
@@ -34,7 +36,14 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, string $id)
     {
-        return $this->userService->updateUser($request, $id);
+        $validatedData = $request->validated();
+
+        return $this->userService->updateUser($validatedData, $id);
+    }
+
+    public function getOffices()
+    {
+        return $this->userService->findOffices();
     }
 
     public function destroy(string $id)

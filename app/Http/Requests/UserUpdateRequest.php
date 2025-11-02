@@ -22,8 +22,19 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|max:225',
-            'email' => 'required|email',
+            // Users table fields
+            'username' => 'required|string|max:255',
+            'password' => 'nullable|string|min:6',
+            'is_supervisor' => 'nullable|boolean',
+            'is_admin' => 'nullable|boolean',
+
+            // User details table fields
+            'employee_id' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'midinit' => 'nullable|string|max:10',
+            'lastname' => 'required|string|max:255',
+            'office' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
         ];
     }
 }

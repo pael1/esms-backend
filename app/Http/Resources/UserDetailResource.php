@@ -15,11 +15,15 @@ class UserDetailResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'address' => $this->address,
-            'birthday' => $this->birthday,
-            'created_at' => $this->created_at,
+            'id'            => $this->id,
+            'employee_id'   => $this->employee_id,
+            'firstname'     => $this->firstname,
+            'midinit'       => $this->midinit,
+            'lastname'      => $this->lastname,
+            'office'        => $this->office,
+            'office_name'   => trim("{$this->officeCode?->officeName}"),
+            'position'      => $this->position,
+            'name'          => trim("{$this->firstname} {$this->midinit} {$this->lastname}"),
         ];
     }
 }

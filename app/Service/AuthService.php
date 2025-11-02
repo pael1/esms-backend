@@ -26,28 +26,37 @@ class AuthService implements AuthServiceInterface
         if (! $user) {
             return response()->json([
                 'message' => 'Invalid Username',
-            ], Response::HTTP_BAD_REQUEST);
+            ], 400);
         }
 
         //since the esms was using old encryption md5()
         // we will convert it to bcrypt in laravel 11
-        $login_password = md5($payload->password); //encrypt the password to md5
-        $user_password = Hash::make(strtolower($user->Password)); //user password encrypted with md5
+        // $login_password = md5($payload->password); //encrypt the password to md5
+        // $user_password = Hash::make(strtolower($user->Password)); //user password encrypted with md5
 
-        if (! Hash::check($login_password, $user_password)) {
+        // if (! Hash::check($login_password, $user_password)) {
+        //     return response()->json([
+        //         'message' => 'Invalid password',
+        //     ], Response::HTTP_BAD_REQUEST);
+        // }
+        // $data = (object) [
+        //     'token' => $user->createToken('auth-token')->plainTextToken,
+        //     // 'user' => new UserResource($user)
+        //     'user' => new UserAccountResource($user),
+        // ];
+
+        if (! Hash::check($payload->password, $user->password)) {
             return response()->json([
                 'message' => 'Invalid password',
-            ], Response::HTTP_BAD_REQUEST);
+            ], 400);
         }
-        // dd($user);
         $data = (object) [
             'token' => $user->createToken('auth-token')->plainTextToken,
-            // 'user' => new UserResource($user)
-            'user' => new UserAccountResource($user),
+            'user' => UserResource::make($user)
         ];
         // dd($data);
 
-        return new AuthResource($data);
+        return AuthResource::make($data);
 
     }
 

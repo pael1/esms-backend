@@ -6,13 +6,15 @@ interface UserServiceInterface
 {
     public function findManyUsers(object $payload);
 
-    // public function findAwardeeById(string $id);
+    public function findUserById(string $id);
 
     public function findUserByEmail(string $email);
 
-    public function createUser(object $payload);
+    public function createUser(array $payload);
 
-    public function updateUser(object $payload, string $id);
+    public function updateUser(array $payload, string $id);
+
+    public function findOffices();
 
     public function deleteUser(string $id);
 }

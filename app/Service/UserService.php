@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Http\Resources\OfficeCodeResource;
 use App\Http\Resources\UserAccountResource;
 use App\Http\Resources\UserResource;
 use App\Interface\Repository\UserRepositoryInterface;
@@ -21,7 +22,7 @@ class UserService implements UserServiceInterface
         // dd($payload);
         $users = $this->userRepository->findMany($payload);
 
-        return UserAccountResource::collection($users);
+        return UserResource::collection($users);
     }
 
     public function findUserById(string $UserId)
@@ -30,7 +31,8 @@ class UserService implements UserServiceInterface
         $user = $this->userRepository->findById($UserId);
 
         // return UserResource::collection($user); for multiple data
-        return new UserAccountResource($user); //for only 1 data
+        // return new UserAccountResource($user); //for only 1 data
+        return UserResource::make($user);
     }
 
     public function findUserByEmail(string $email)
@@ -42,18 +44,25 @@ class UserService implements UserServiceInterface
         return new UserResource($user); //for only 1 data
     }
 
-    public function createUser(object $payload)
+    public function createUser(array $payload)
     {
         $user = $this->userRepository->create($payload);
 
         return new UserResource($user);
     }
 
-    public function updateUser(object $payload, string $id)
+    public function updateUser(array $payload, string $id)
     {
         $user = $this->userRepository->update($payload, $id);
 
         return new UserResource($user);
+    }
+
+    public function findOffices()
+    {
+        $users = $this->userRepository->findOffices();
+
+        return OfficeCodeResource::collection($users);
     }
 
     public function deleteUser(string $id)
