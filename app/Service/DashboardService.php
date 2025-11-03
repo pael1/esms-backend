@@ -17,8 +17,8 @@ class DashboardService implements DashboardServiceInterface
 
     public function getTotalRevenue(object $payload)
     {
-        $sum = $this->dashboardRepository->getTotalRevenue($payload);
+        $revenue = $this->dashboardRepository->getTotalRevenue($payload);
 
-        return $sum;
+        return $revenue;
     }
 }

@@ -47,9 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // awardee endpoints
     Route::prefix('awardees')->group(function () {
-        Route::get('/childrens/{id}', [AwardeeController::class, 'get_childrens']);
-        Route::get('/transactions/{id}', [AwardeeController::class, 'get_transactions']);
-        Route::get('/employees-data/{id}', [AwardeeController::class, 'get_employees_data']);
+        // Route::get('/{id}/childrens', [AwardeeController::class, 'get_childrens']);
+        Route::get('/{id}/transactions', [AwardeeController::class, 'get_transactions']);
+        // Route::get('/{id}/employees-data', [AwardeeController::class, 'get_employees_data']);
         Route::get('/generate/current-bill', [AwardeeController::class, 'current_billing']);
     });
 
