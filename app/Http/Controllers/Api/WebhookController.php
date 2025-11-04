@@ -13,9 +13,6 @@ class WebhookController extends Controller
     public function receiver(Request $request)
     {
         try {
-            // Log full payload
-            Log::info('Webhook received', ['body' => $request->all()]);
-
             $data = $request->all();
             $opDetails = $data[0] ?? null;
 
@@ -36,12 +33,6 @@ class WebhookController extends Controller
                     'ORNum'  => $orNumber,
                     'ORDate' => $orDate,
                 ]);
-
-            Log::info('StallOP updated', [
-                'OPRefId' => $opDetails['oprefid'],
-                'ORNum'   => $orNumber,
-                'ORDate'  => $orDate,
-            ]);
 
             return response()->json(['status' => 'received'], 200);
 
