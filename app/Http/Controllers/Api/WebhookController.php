@@ -18,16 +18,21 @@ class WebhookController extends Controller
         $data = $request->all();
         $opDetails = $data[0] ?? null;
 
-        // Combine OR number
-        $orNumber = $opDetails['afnum'] . '' . $opDetails['afext'];
-        $orDate = $opDetails['issuedate']->format('Y-m-d');
+        try {
+            // Combine OR number
+            $orNumber = $opDetails['afnum'] . '' . $opDetails['afext'];
+            $orDate = $opDetails['issuedate']->format('Y-m-d');
 
-        // Update StallOP record
-        StallOP::where('OPRefId', $opDetails['oprefid'])
-            ->update([
-                'ORNum'  => $orNumber,
-                'ORDate' => $orDate,
-            ]);
+            // Update StallOP record
+            StallOP::where('OPRefId', $opDetails['oprefid'])
+                ->update([
+                    'ORNum'  => $orNumber,
+                    'ORDate' => $orDate,
+                ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            Log::info('Error:', $th);
+        }
 
         return response()->json(['status' => 'received'], 200);
     }
