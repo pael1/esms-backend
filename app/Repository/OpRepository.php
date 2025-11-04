@@ -100,6 +100,11 @@ class OpRepository implements OpRepositoryInterface
             ->select('OPRefId')
             ->first();
 
+        // If no previous OP found, just return false (no match possible)
+        if (!$op) {
+            return false;
+        }
+
         $op->oprefid = $op->OPRefId;
         
         // $items = collect(json_decode($payload_items, true))->map(function ($item) {
