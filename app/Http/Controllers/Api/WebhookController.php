@@ -12,16 +12,23 @@ class WebhookController extends Controller
 {
     public function receiver(Request $request)
     {
-        // Log or process the webhook payload
-        Log::info('Webhook received:', $request->all());
-
-        $data = $request->all();
-        $opDetails = $data[0] ?? null;
-
         try {
+            // Log full payload
+            Log::info('Webhook received', ['body' => $request->all()]);
+
+            $data = $request->all();
+            $opDetails = $data[0] ?? null;
+
+            if (!$opDetails) {
+                Log::warning('Webhook missing data.');
+                return response()->json(['error' => 'Invalid payload'], 400);
+            }
+
             // Combine OR number
-            $orNumber = $opDetails['afnum'] . '' . $opDetails['afext'];
-            $orDate = $opDetails['issuedate']->format('Y-m-d');
+            $orNumber = ($opDetails['afnum'] ?? '') . ($opDetails['afext'] ?? '');
+
+            // Convert issuedate string (e.g. "11/4/2025 3:00:10 PM") to proper Y-m-d format
+            $orDate = \Carbon\Carbon::createFromFormat('n/j/Y g:i:s A', $opDetails['issuedate'])->format('Y-m-d');
 
             // Update StallOP record
             StallOP::where('OPRefId', $opDetails['oprefid'])
@@ -29,12 +36,25 @@ class WebhookController extends Controller
                     'ORNum'  => $orNumber,
                     'ORDate' => $orDate,
                 ]);
-        } catch (\Throwable $th) {
-            //throw $th;
-            Log::info('Error:', $th);
-        }
 
-        return response()->json(['status' => 'received'], 200);
+            Log::info('StallOP updated', [
+                'OPRefId' => $opDetails['oprefid'],
+                'ORNum'   => $orNumber,
+                'ORDate'  => $orDate,
+            ]);
+
+            return response()->json(['status' => 'received'], 200);
+
+        } catch (\Throwable $th) {
+            // Log errors properly
+            Log::error('Webhook processing failed', [
+                'error' => $th->getMessage(),
+                'line'  => $th->getLine(),
+                'file'  => $th->getFile(),
+            ]);
+
+            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+        }
     }
 
     public function subscribe(Request $request)
