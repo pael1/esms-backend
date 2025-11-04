@@ -15,22 +15,22 @@ class WebhookController extends Controller
         // Log or process the webhook payload
         Log::info('Webhook received:', $request->all());
 
-        // Decode JSON array if it's sent as raw JSON
-        $data = $request->json()->all();
+        // // Decode JSON array if it's sent as raw JSON
+        // $data = $request->json()->all();
 
-        // Get the first (and only) record
-        $payload = $data[0] ?? null;
+        // // Get the first (and only) record
+        // $payload = $data[0] ?? null;
 
-        // Combine OR number
-        $orNumber = $payload['afnum'] . '' . $payload['afext'];
-        $orDate = $payload['issuedate']->format('Y-m-d');
+        // // Combine OR number
+        // $orNumber = $payload['afnum'] . '' . $payload['afext'];
+        // $orDate = $payload['issuedate']->format('Y-m-d');
 
-        // Update StallOP record
-        StallOP::where('OPRefId', $payload['oprefid'])
-            ->update([
-                'ORNum'  => $orNumber,
-                'ORDate' => $orDate,
-            ]);
+        // // Update StallOP record
+        // StallOP::where('OPRefId', $payload['oprefid'])
+        //     ->update([
+        //         'ORNum'  => $orNumber,
+        //         'ORDate' => $orDate,
+        //     ]);
 
         return response()->json(['status' => 'received'], 200);
     }
