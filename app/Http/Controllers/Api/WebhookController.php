@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\StallOP;
 use Illuminate\Support\Facades\Http;
 
 class WebhookController extends Controller
@@ -14,7 +15,23 @@ class WebhookController extends Controller
         // Log or process the webhook payload
         Log::info('Webhook received:', $request->all());
 
-        // You can validate or act on the payload here
+        // Combine OR number
+        $orNumber = $request['afnum'] . '' . $request['afext'];
+
+        // Convert date from "11/4/2025 1:47:33 PM" to "2025-11-04"
+        try {
+            $orDate = \Carbon\Carbon::createFromFormat('n/j/Y g:i:s A', $request['issuedate'])->format('Y-m-d');
+        } catch (\Exception $e) {
+            Log::error('Invalid date format received from webhook: ' . $request['issuedate']);
+            $orDate = null;
+        }
+
+        // Update StallOP record
+        StallOP::where('OPRefId', $request['oprefid'])
+            ->update([
+                'ORNum'  => $orNumber,
+                'ORDate' => $orDate,
+            ]);
 
         return response()->json(['status' => 'received'], 200);
     }
