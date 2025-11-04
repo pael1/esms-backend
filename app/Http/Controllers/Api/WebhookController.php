@@ -15,19 +15,18 @@ class WebhookController extends Controller
         // Log or process the webhook payload
         Log::info('Webhook received:', $request->all());
 
-        // Combine OR number
-        $orNumber = $request['afnum'] . '' . $request['afext'];
+        // Decode JSON array if it's sent as raw JSON
+        $data = $request->json()->all();
 
-        // Convert date from "11/4/2025 1:47:33 PM" to "2025-11-04"
-        try {
-            $orDate = \Carbon\Carbon::createFromFormat('n/j/Y g:i:s A', $request['issuedate'])->format('Y-m-d');
-        } catch (\Exception $e) {
-            Log::error('Invalid date format received from webhook: ' . $request['issuedate']);
-            $orDate = null;
-        }
+        // Get the first (and only) record
+        $payload = $data[0] ?? null;
+
+        // Combine OR number
+        $orNumber = $payload['afnum'] . '' . $payload['afext'];
+        $orDate = $payload['issuedate']->format('Y-m-d');
 
         // Update StallOP record
-        StallOP::where('OPRefId', $request['oprefid'])
+        StallOP::where('OPRefId', $payload['oprefid'])
             ->update([
                 'ORNum'  => $orNumber,
                 'ORDate' => $orDate,
