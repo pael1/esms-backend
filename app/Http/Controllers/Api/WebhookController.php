@@ -15,11 +15,12 @@ class WebhookController extends Controller
         // Log or process the webhook payload
         Log::info('Webhook received:', $request->all());
 
-        // // Decode JSON array if it's sent as raw JSON
-        // $data = $request->json()->all();
+        // Decode JSON array if it's sent as raw JSON
+        $data = $request->json()->all();
 
-        // // Get the first (and only) record
-        // $payload = $data[0] ?? null;
+        // Get the first (and only) record
+        $payload = $data[0] ?? null;
+        logger("AFNum: ", $payload['afnum']);
 
         // // Combine OR number
         // $orNumber = $payload['afnum'] . '' . $payload['afext'];
