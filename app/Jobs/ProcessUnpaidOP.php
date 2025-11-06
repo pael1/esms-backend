@@ -69,7 +69,7 @@ class ProcessUnpaidOP implements ShouldQueue
                     ];
 
                     //sync to ledger
-                    $this->opRepository->saveOP($payload);
+                    $this->opRepository->saveOP($payload, '');
                 }
 
                 //update ledger

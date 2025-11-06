@@ -12,7 +12,7 @@ interface OpRepositoryInterface
 
     public function checkOP(object $payload, array $items);
 
-    public function saveOP(object $payload);
+    public function saveOP(object $payload, string $ids);
 
     public function create(object $payload);
 

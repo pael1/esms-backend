@@ -3,18 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use Log;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\StallOP;
+use Illuminate\Http\Request;
+use App\Models\StallOwnerAccount;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use App\Interface\Repository\OpRepositoryInterface;
 
 class WebhookController extends Controller
 {
 
     private $apiEndpoint;
+    private $opRepository;
 
-    public function __construct()
+    public function __construct(OpRepositoryInterface $opRepository)
     {
+        $this->opRepository = $opRepository;
         if (app()->environment('local', 'staging')) {
             $this->apiEndpoint = config('services.pops_url_staging');
         } else {
@@ -39,12 +44,29 @@ class WebhookController extends Controller
             // Convert issuedate string (e.g. "11/4/2025 3:00:10 PM") to proper Y-m-d format
             $orDate = \Carbon\Carbon::createFromFormat('n/j/Y g:i:s A', $opDetails['issuedate'])->format('Y-m-d');
 
-            // Update StallOP record
-            StallOP::where('OPRefId', $opDetails['oprefid'])
-                ->update([
-                    'ORNum'  => $orNumber,
-                    'ORDate' => $orDate,
-                ]);
+            $esmsOp = $this->opRepository->getOP($opDetails['oprefid']);
+
+            if($esmsOp){
+
+                DB::transaction(function () use ($opDetails, $orNumber, $orDate, $esmsOp) {
+                    // Update StallOP record
+                    StallOP::where('OPRefId', $opDetails['oprefid'])
+                        ->update([
+                            'ORNum'  => $orNumber,
+                            'ORDate' => $orDate,
+                        ]);
+
+                    // Convert ledger_ids string (e.g. "1,2,3") into an array
+                    $idArray = explode(',', $esmsOp->ledger_ids);
+
+                    // Update StallOwnerAccount records
+                    StallOwnerAccount::whereIn('stallOwnerAccountId', $idArray)
+                        ->update([
+                            'ORNum'  => $orNumber,
+                            'ORDate' => $orDate,
+                        ]);
+                });
+            }
 
             return response()->json(['status' => 'received'], 200);
 

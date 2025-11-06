@@ -248,6 +248,7 @@ class AwardeeService implements AwardeeServiceInterface
                 ], Response::HTTP_BAD_REQUEST);
             }
 
+            $ledgerIds = [];
             foreach ($newItems as $newItem) {
                 //get account code
                 $accountCode = $this->opRepository->getAccountCode($officeCode, $newItem['description'], $newItem['description1']);
@@ -260,9 +261,26 @@ class AwardeeService implements AwardeeServiceInterface
                 $payload->amount = $newItem['amount_basic'];
                 $payload->OPRefId = $OPRefId;
                 $payload->purpose = $newItem['label'];
-                $this->opRepository->saveOP($payload);
-                //will create cron on this, auto create ledger for the owner does not paid on current month
-                // $this->LedgerRepository->createLedger($payload, $newItem);
+
+                //for current month only
+                if($newItem['value'] === 'current'){
+                    //check if the current month is already added in ledger
+                    //if added, get the ledgerid
+                    $ledger = $this->LedgerRepository->checkLedgerExists($payload->ownerId, $newItem['label']);
+                    if ($ledger) {
+                        $ledgerIds[] = $ledger->stallOwnerAccountId;
+                    } else { //create ledger
+                        $newLedger = $this->LedgerRepository->createLedger($payload, $newItem);
+                        $ledgerIds[] = $newLedger->stallOwnerAccountId;
+                    }
+                } else {
+                    $ledgerIds[] = $newItem['value'];
+                }
+
+                //NOTE: I just need the last saved ids since the all ids are there and it will be use when updating the ledger from webhook
+                $ids = implode(',', $ledgerIds);
+
+                $this->opRepository->saveOP($payload, $ids);
                 $totalAmount += $newItem['amount_basic'];
 
                 $itemsPaid[] = [

@@ -128,7 +128,7 @@ class OpRepository implements OpRepositoryInterface
         return $sorted_items === $sorted_latest;
     }
 
-    public function saveOP(object $payload)
+    public function saveOP(object $payload, string $ids)
     {
         // $stallprofile = json_decode($payload->stallprofile);
 
@@ -147,6 +147,7 @@ class OpRepository implements OpRepositoryInterface
         $op->purpose = $payload->purpose;
         $op->opTN = 'M' . str_replace('-', '', $payload->OPRefId);
         $op->fk = 0;
+        $op->ledger_ids = $ids;
         //null if no data pass on payload
         $op->ORNum = $payload->ORNum ?? null;
         $op->ORDate = $payload->ORDate ?? null;
@@ -266,5 +267,12 @@ class OpRepository implements OpRepositoryInterface
         }
 
         return $matchedCode;
+    }
+
+    public function getOP(string $opRefId)
+    {
+        return StallOP::where('OPRefId', $opRefId)
+                  ->orderBy('stallOPId', 'desc')
+                  ->first();
     }
 }

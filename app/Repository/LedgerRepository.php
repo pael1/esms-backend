@@ -28,10 +28,7 @@ class LedgerRepository implements LedgerRepositoryInterface
     public function createLedger(object $payload, array $item)
     {
         $dateParts = explode(' ', $item['label']);
-        $isLedgerExists = StallOwnerAccount::where('ownerId', $payload->ownerId)
-                    ->where('month', $dateParts[0])
-                    ->where('year', $dateParts[1])
-                    ->first();
+        $isLedgerExists = $this->checkLedgerExists($payload->ownerId, $item['label']);
 
         $ledger = new StallOwnerAccount();
         if($item['value'] === 'current' && !$isLedgerExists) {
@@ -39,8 +36,8 @@ class LedgerRepository implements LedgerRepositoryInterface
                 $ledger->ownerId = $payload->ownerId;
                 $ledger->month = $dateParts[0];
                 $ledger->year = $dateParts[1];
-                $ledger->amountBasic = $item['amountBasic'];
-                $ledger->OPRefId = $payload->OPRefId;
+                $ledger->amountBasic = $item['amount_basic'];
+                // $ledger->OPRefId = $payload->OPRefId;
                 $ledger->generatedBy = $payload->postBy;
                 $ledger->save();
             } catch (\Exception $e) {
@@ -49,6 +46,15 @@ class LedgerRepository implements LedgerRepositoryInterface
             }
         }
         return $ledger;
+    }
+
+    public function checkLedgerExists(string $ownerId, string $date)
+    {
+        $dateParts = explode(' ', $date);
+        return StallOwnerAccount::where('ownerId', $ownerId)
+                    ->where('month', $dateParts[0])
+                    ->where('year', $dateParts[1])
+                    ->first();
     }
 
     public function updateLedger(object $payload, string $id)
