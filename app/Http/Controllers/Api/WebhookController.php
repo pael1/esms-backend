@@ -10,6 +10,18 @@ use Illuminate\Support\Facades\Http;
 
 class WebhookController extends Controller
 {
+
+    private $apiEndpoint;
+
+    public function __construct()
+    {
+        if (app()->environment('local', 'staging')) {
+            $this->apiEndpoint = config('services.pops_url_staging');
+        } else {
+            $this->apiEndpoint = config('services.pops_url');
+        }
+    }
+
     public function receiver(Request $request)
     {
         try {
@@ -512,9 +524,9 @@ class WebhookController extends Controller
         ];
 
         $callbackUrl = 'http://192.168.61.141/api/webhook/receiver';
+        $subscribeUrl = "{$this->apiEndpoint}/webhook/subscribe";
 
         foreach ($accountcodes as $accountcode) {
-            $subscribeUrl = "http://192.168.10.177/webhook/subscribe";
             $response = Http::get($subscribeUrl, [
                 'accountcode' => $accountcode,
                 'callbackurl' => $callbackUrl

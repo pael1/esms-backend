@@ -19,7 +19,7 @@ class Api
 
     public function connect()
     {
-        $response = Http::get("{$this->apiEndpoint}/connection");
+        $response = Http::get("{$this->apiEndpoint}/api/connection");
 
         if ($response['white_ip']) {
             return 'Success.';
@@ -31,7 +31,7 @@ class Api
     public function checkPopsStatus()
     {
         try {
-            Http::timeout(10)->get("{$this->apiEndpoint}/op/OBPS-24-012345");
+            Http::timeout(10)->get("{$this->apiEndpoint}/api/op/OBPS-24-012345");
 
             return 'Up';
         } catch (RequestException $e) {
@@ -43,14 +43,14 @@ class Api
 
     public function accountCodes($office_code)
     {
-        $response = Http::get("{$this->apiEndpoint}/accountcodes/{$office_code}");
+        $response = Http::get("{$this->apiEndpoint}/api/accountcodes/{$office_code}");
 
         return $response;
     }
 
     public function checkORNumber($or_number)
     {
-        $response = Http::get("{$this->apiEndpoint}/receipts/{$or_number}");
+        $response = Http::get("{$this->apiEndpoint}/api/receipts/{$or_number}");
 
         return $response;
     }
@@ -69,7 +69,7 @@ class Api
         $postedby = $payload->postBy;
         $duedate = $payload->duedate;
 
-        $url = "{$this->apiEndpoint}/saveop"
+        $url = "{$this->apiEndpoint}/api/saveop"
             ."?oprefid={$oprefid}"
             .'&opsysid=ESMS'
             ."&acctrefid={$ownerid}"

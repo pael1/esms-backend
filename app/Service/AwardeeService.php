@@ -140,14 +140,6 @@ class AwardeeService implements AwardeeServiceInterface
 
     public function current_billing(object $payload)
     {
-        // $is_op_exists = $this->opRepository->checkOP($payload);
-        // // items already generated
-        // if ($is_op_exists) {
-        //     return response()->json([
-        //         'message' => 'This Item/s are already generated',
-        //     ], Response::HTTP_BAD_REQUEST);
-        // }
-
         $connection = $this->popsApi->connect();
         $serverStatus = $this->popsApi->checkPopsStatus();
     
