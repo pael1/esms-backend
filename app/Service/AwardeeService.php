@@ -189,7 +189,7 @@ class AwardeeService implements AwardeeServiceInterface
 
                 //check if this month is already paid
                 $date = $this->LedgerRepository->checkLedgerExists($payload->ownerId, $item['label']);
-                if ($date->ORNum) {
+                if ($date && $date->ORNum) {
                     return response()->json([
                         'message' => $item['label']. ' is already paid',
                     ], Response::HTTP_BAD_REQUEST);
