@@ -22,6 +22,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route()->parameters()['user'];
         return [
             // Users table fields
             'username' => 'required|string|max:255',
@@ -30,7 +31,7 @@ class UserUpdateRequest extends FormRequest
             'is_admin' => 'nullable|boolean',
 
             // User details table fields
-            'employee_id' => ['required','string','max:255', Rule::unique('user_details', 'employee_id')->ignore($this->id, 'user_id'),],
+            'employee_id' => ['required','string','max:255', Rule::unique('user_details', 'employee_id')->ignore($id, 'user_id'),],
             'firstname' => 'required|string|max:255',
             'midinit' => 'nullable|string|max:10',
             'lastname' => 'required|string|max:255',
