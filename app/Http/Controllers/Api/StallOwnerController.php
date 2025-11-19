@@ -45,20 +45,7 @@ class StallOwnerController extends Controller
      */
     public function store(StoreStallOwnerRequest $request)
     {
-        //cast as array if no $validated it was object matic
         $validated = $request->validated();
-
-        $exists = Stallowner::where('firstname', $request->firstname)
-            ->where('lastname', $request->lastname)
-            ->where('midinit', $request->midinit)
-            ->exists();
-
-        if ($exists) {
-            return response()->json([
-                'message' => 'The full name already exists.'
-            ], 422);
-        }
-
         return $this->stallOwnerService->create($validated);
     }
 
@@ -77,19 +64,6 @@ class StallOwnerController extends Controller
     {
         //cast as array if no $validated it was object matic
         $validated = $request->validated();
-
-        $exists = Stallowner::where('firstname', $request->firstname)
-            ->where('lastname', $request->lastname)
-            ->where('midinit', $request->midinit)
-            ->where('ownerId', '!=', $id) // exclude current record
-            ->exists();
-
-        if ($exists) {
-            return response()->json([
-                'message' => 'The full name already exists.'
-            ], 422);
-        }
-
         return $this->stallOwnerService->update($validated, $id);
     }
 
@@ -99,5 +73,11 @@ class StallOwnerController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    //get status details
+    public function statusDetails(Request $request)
+    {
+        return $this->stallOwnerService->checkDetails($request);
     }
 }

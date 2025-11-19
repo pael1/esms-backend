@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('stallowner')->group(function () {
         Route::get('/{id}/details/{rentalId}', [StallOwnerController::class, 'owner']);
         Route::get('/{searchName}/names', [StallOwnerController::class, 'ownerNames']);
+        Route::get('/status/details', [StallOwnerController::class, 'statusDetails']);
     });
 
     //stalls endpoints

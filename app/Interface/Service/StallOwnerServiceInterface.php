@@ -17,4 +17,6 @@ interface StallOwnerServiceInterface
     public function update(array $payload, string $id);
 
     public function delete(string $id);
+
+    public function checkDetails(object $payload);
 }

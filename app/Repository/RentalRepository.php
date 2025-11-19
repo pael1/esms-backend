@@ -26,6 +26,13 @@ class RentalRepository implements RentalRepositoryInterface
     public function create(array $payload)
     {
         return DB::transaction(function () use ($payload) {
+            if (isset($payload['selectedFile'])) {
+                $filePath = $payload['selectedFile']->store('rental_files', 'public');
+                $payload['documentFiles'] = $filePath;
+            }
+
+            unset($payload['selectedFile']);
+
             $owner = Stallowner::where('ownerId', $payload['ownerId'])->first();
 
             if (!$owner) {

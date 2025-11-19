@@ -18,4 +18,6 @@ interface StallRepositoryInterface
     public function updateStall(string $stallId, object $data);
     
     public function deleteStall(string $stallId);
+
+    public function findStallByOwnerName(string $stallId);
 }

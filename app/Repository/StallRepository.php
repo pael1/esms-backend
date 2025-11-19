@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
-use App\Interface\Repository\StallRepositoryInterface;
+use App\Models\Stallowner;
 use App\Models\Stallprofile;
+use App\Interface\Repository\StallRepositoryInterface;
 
 class StallRepository implements StallRepositoryInterface
 {
@@ -112,5 +113,18 @@ class StallRepository implements StallRepositoryInterface
     public function deleteStall(string $stallId)
     {
         // Implementation for deleting a stall
+    }
+
+    public function findStallByOwnerName(string $name)
+    {
+        return Stallowner::with('stallRentalDet','stallRentalDet.StallProfile')
+            ->where('rental_status', 'rented')
+            ->whereRaw("
+                CONCAT(
+                    firstname, ' ',
+                    TRIM(CONCAT(COALESCE(CONCAT(midinit, ' '), ''), lastname))
+                ) LIKE ?
+            ", ["%{$name}%"])
+            ->first();
     }
 }

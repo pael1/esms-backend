@@ -31,6 +31,7 @@ class StallOwnerResource extends JsonResource
             'dateRegister' => $this->dateRegister,
             'contactnumber' => $this->contactnumber,
             'rental_status' => $this->rental_status,
+            'market_name' => $this->market_name ?? null,
             'childrens' => StallOwnerChildResource::collection(
                 $this->whenLoaded('childrens', $this->childrens, collect())
             ),

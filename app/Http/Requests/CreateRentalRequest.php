@@ -31,6 +31,7 @@ class CreateRentalRequest extends FormRequest
             'lineOfBusiness'    => 'nullable|string|max:255',
             'ownerId'           => 'required|string',
             'stallNo'           => 'required|string',
+            'selectedFile' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:4096',
         ];
     }
 }

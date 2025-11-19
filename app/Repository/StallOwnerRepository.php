@@ -232,4 +232,14 @@ class StallOwnerRepository implements StallOwnerRepositoryInterface
         //     'message' => "successfully deleted"
         // ], Response::HTTP_OK);
     }
+
+    public function checkDetails(object $payload)
+    {
+        return Stallowner::with('stallRentalDet','stallRentalDet.StallProfile')
+            ->where('firstname', $payload->firstname)
+            ->where('lastname', $payload->lastname)
+            ->where('midinit', $payload->midinit)
+            ->where('rental_status', 'rented')
+            ->get();
+    }
 }
