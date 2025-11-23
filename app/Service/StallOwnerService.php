@@ -86,7 +86,7 @@ class StallOwnerService implements StallOwnerServiceInterface
         return $this->StallOwnerRepository->delete($id);
     }
 
-    //checking if the has already 2 stall rentals
+    //icheck kung kani nga owner naa nay stall nga active
     public function checkDetails(object $payload)
     {
         $stallOwners = $this->StallOwnerRepository->checkDetails($payload);
