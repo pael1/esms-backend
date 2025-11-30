@@ -37,8 +37,9 @@ class LedgerRepository implements LedgerRepositoryInterface
                 $ledger->month = $dateParts[0];
                 $ledger->year = $dateParts[1];
                 $ledger->amountBasic = $item['amount_basic'];
-                // $ledger->OPRefId = $payload->OPRefId;
+                $ledger->isadded = '0';
                 $ledger->generatedBy = $payload->postBy;
+                $ledger->expdate = $payload->duedate;
                 $ledger->save();
             } catch (\Exception $e) {
                 logger("Failed to create ledger: " . $e->getMessage());
