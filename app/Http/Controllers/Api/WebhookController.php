@@ -551,8 +551,6 @@ class WebhookController extends Controller
         } else {
             $callbackUrl = 'https://esmsapi.davaocity.gov.ph/api/webhook/receiver';
         }
-        logger($callbackUrl);
-        dd( $callbackUrl );
 
         $subscribeUrl = "{$this->apiEndpoint}/webhook/subscribe";
 
