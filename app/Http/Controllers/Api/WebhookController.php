@@ -7,6 +7,7 @@ use App\Models\StallOP;
 use Illuminate\Http\Request;
 use App\Models\StallOwnerAccount;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use App\Interface\Repository\OpRepositoryInterface;
@@ -545,7 +546,12 @@ class WebhookController extends Controller
             "29999990-20-74-2",
         ];
 
-        $callbackUrl = 'http://192.168.61.141/api/webhook/receiver';
+        if (App::environment(['local', 'staging'])) {
+            $callbackUrl = 'http://192.168.61.141/api/webhook/receiver';
+        } else {
+            $callbackUrl = 'https://esmsapi.davaocity.gov.ph/api/webhook/receiver';
+        }
+
         $subscribeUrl = "{$this->apiEndpoint}/webhook/subscribe";
 
         foreach ($accountcodes as $accountcode) {
