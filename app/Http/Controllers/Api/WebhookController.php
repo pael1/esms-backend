@@ -552,7 +552,7 @@ class WebhookController extends Controller
             $callbackUrl = 'https://esmsapi.davaocity.gov.ph/api/webhook/receiver';
         }
 
-        $subscribeUrl = "{$this->apiEndpoint}/webhook/subscribe";
+        $subscribeUrl = "{$this->apiEndpoint}/api/webhook/subscribe";
 
         foreach ($accountcodes as $accountcode) {
             $response = Http::get($subscribeUrl, [
