@@ -2,13 +2,15 @@
 
 namespace App\Service;
 
-use App\Http\Resources\AuthResource;
-use App\Http\Resources\UserAccountResource;
-use App\Http\Resources\UserResource;
-use App\Interface\Repository\UserRepositoryInterface;
-use App\Interface\Service\AuthServiceInterface;
+use Illuminate\Support\Str;
 use Illuminate\Http\Response;
+use App\Http\Resources\AuthResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\UserAccountResource;
+use Illuminate\Support\Facades\RateLimiter;
+use App\Interface\Service\AuthServiceInterface;
+use App\Interface\Repository\UserRepositoryInterface;
 
 class AuthService implements AuthServiceInterface
 {
@@ -21,43 +23,78 @@ class AuthService implements AuthServiceInterface
 
     public function login(object $payload)
     {
+        $key = $this->throttleKey($payload->username);
+
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = RateLimiter::availableIn($key);
+
+            // Log lockout as suspicious
+            activity()
+                ->event('login_lockout')
+                ->withProperties([
+                    'username'    => $payload->username,
+                    'ip'          => request()->ip(),
+                    'user_agent'  => request()->userAgent(),
+                    'attempts'    => RateLimiter::attempts($key),
+                    'retry_after' => $seconds,
+                ])
+                ->log('Login locked out due to too many attempts.');
+
+            return response()->json([
+                'message'      => 'Too many login attempts. Please try again later.',
+                'retry_after'  => $seconds,
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $user = $this->userRepository->findByUsername($payload->username);
 
-        if (! $user) {
+        RateLimiter::hit($key, 60); // decay after 60 seconds
+
+        if (! $user || ! Hash::check($payload->password, $user->password)) {
+
+            activity()
+                ->event('login_failed')
+                ->withProperties([
+                    'username'   => $payload->username,
+                    'ip'         => request()->ip(),
+                    'user_agent' => request()->userAgent(),
+                    'reason'     => $user ? 'invalid_password' : 'invalid_username',
+                ])
+                ->log('Login attempt failed.');
+
             return response()->json([
-                'message' => 'Invalid Username',
-            ], 400);
+                'message' => 'Invalid credentials.',
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        //since the esms was using old encryption md5()
-        // we will convert it to bcrypt in laravel 11
-        // $login_password = md5($payload->password); //encrypt the password to md5
-        // $user_password = Hash::make(strtolower($user->Password)); //user password encrypted with md5
+        RateLimiter::clear($key);
 
-        // if (! Hash::check($login_password, $user_password)) {
-        //     return response()->json([
-        //         'message' => 'Invalid password',
-        //     ], Response::HTTP_BAD_REQUEST);
-        // }
-        // $data = (object) [
-        //     'token' => $user->createToken('auth-token')->plainTextToken,
-        //     // 'user' => new UserResource($user)
-        //     'user' => new UserAccountResource($user),
-        // ];
+        $token = $user->createToken('auth-token')->plainTextToken;
 
-        if (! Hash::check($payload->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid password',
-            ], 400);
-        }
         $data = (object) [
-            'token' => $user->createToken('auth-token')->plainTextToken,
-            'user' => UserResource::make($user)
+            'token' => $token,
+            'user'  => UserResource::make($user),
         ];
-        // dd($data);
+
+        //Log successful login
+        activity()
+            ->event('login_success')
+            ->causedBy($user)
+            ->withProperties([
+                'user_id'    => $user->id,
+                'username'   => $payload->username,
+                'ip'         => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ])
+            ->log('User logged in successfully.');
 
         return AuthResource::make($data);
 
+    }
+
+    protected function throttleKey(string $username): string
+    {
+        return Str::lower($username) . '|' . request()->ip();
     }
 
     public function logout(object $payload)
