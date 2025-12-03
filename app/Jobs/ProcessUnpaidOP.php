@@ -45,8 +45,7 @@ class ProcessUnpaidOP implements ShouldQueue
         $this->syncRepository = $syncRepository;
         
         foreach ($this->data as $item) {
-            $ornumber = '0000' . $item->ornumber;
-            $response = $this->popsApi->checkORNumber($ornumber);
+            $response = $this->popsApi->checkORNumber($item->ornumber);
             $opDetails = $response->json();
             if (isset($opDetails['message']) && $opDetails['message'] === 'Success') {
                 $oprefId = $opDetails['pops']['oprefid'];
