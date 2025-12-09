@@ -153,7 +153,6 @@ class AwardeeService implements AwardeeServiceInterface
                 'message' => 'POPS server down.',
             ], Response::HTTP_BAD_REQUEST);
         } else {
-            // $has_extension = ($payload->extension == '0.00') ? false : true;
             $stallprofile = json_decode($payload->stallprofile);
 
             $officeCode = substr($stallprofile->officecode->officeCode, 0, 2) . '-' . substr($stallprofile->officecode->officeCode, 2);
@@ -186,7 +185,6 @@ class AwardeeService implements AwardeeServiceInterface
             
             $newItems = [];
             foreach ($items as $item) {
-
                 //check if this month is already paid
                 $date = $this->LedgerRepository->checkLedgerExists($payload->ownerId, $item['label']);
                 if ($date && $date->ORNum) {
@@ -236,16 +234,18 @@ class AwardeeService implements AwardeeServiceInterface
                     ];
                 }
 
+                $has_extension = ($item['extensionRate'] == '0.00') ? false : true;
                 // Create the item for the extension
-                // if ($has_extension) {
-                //     $newItems[] = [
-                //         'value' => $item['value'],
-                //         'label' => $item['label'],
-                //         'amount_basic' => $item['extensionRate'],
-                //         'office_code' => $officeCode,
-                //         'description' => 'Extension',
-                //     ];
-                // }
+                if ($has_extension) {
+                    $newItems[] = [
+                        'value' => $item['value'],
+                        'label' => $item['label'],
+                        'amount_basic' => $item['extensionRate'],
+                        'office_code' => $officeCode,
+                        'description' => 'Extension',
+                        'description1' => 'Rental',
+                    ];
+                }
                 
             }
 
@@ -302,7 +302,6 @@ class AwardeeService implements AwardeeServiceInterface
             //save to pops
             $payload->items = $itemsPaid;
             $this->popsApi->createPayment($payload);
-
             $signatory = $this->signatoryRepository->findById($stallprofile->signatory->signatoryId);
             $pdf = Pdf::loadView('pdf.top', [
                 'owner_name' => $payload->name,
