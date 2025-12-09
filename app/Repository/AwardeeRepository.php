@@ -197,7 +197,8 @@ class AwardeeRepository implements AwardeeRepositoryInterface
         $query = DB::table('stallowner as a')
             ->leftJoin('stallrentaldet as b', 'a.stallownerid', '=', 'b.STALLOWNER_stallOwnerId')
             ->leftJoin('stallprofile as c', 'b.stallno', '=', 'c.stallno')
-            ->where('a.ownerStatus', 'ACTIVE')
+            //temporary nako ge comment kay daghan awardee dli makita
+            // ->whereNot('a.ownerStatus', 'INACTIVE')
             ->where('c.marketcode', $payload->marketcode)
             ->where('c.stallType', $payload->type)
             ->whereRaw('SUBSTRING(c.sectionCode, 3, 2) = ?', [$payload->section])
