@@ -35,10 +35,10 @@ class SyncOpRepository implements SyncOpRepositoryInterface
         // return Parameter::where('fieldId', $id);
     }
 
-    public function updateById(string $id)
+    public function updateById(string $id, string $status)
     {
         return SyncOp::where('id', $id)
-            ->update(['is_processed' => 1]);
+            ->update(['is_processed' => $status]);
     }
 
     public function create(object $payload)

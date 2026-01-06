@@ -82,7 +82,10 @@ class ProcessUnpaidOP implements ShouldQueue
                 $this->ledgerRepository->updateLedgerSync($ledgerPayload);
 
                 //update sync status
-                $this->syncRepository->updateById($item->id);
+                $this->syncRepository->updateById($item->id, '1');
+            } else {
+                //update sync status to Not Found on POPS
+                $this->syncRepository->updateById($item->id, '2');
             }
         }
     }
