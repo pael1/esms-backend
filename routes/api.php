@@ -88,10 +88,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('data/offices', 'getOffices');
     });
 
+    //sync operations endpoints
     //sync operations for awardees and ledgers data update from external system to local system 
     Route::prefix('sync')->controller(SyncOpController::class)->group(function () {
         Route::get('data/arrears', 'arrearsMonth');
+        Route::post('{id}/paid-manually', 'paidManually');
     });
+    //end sync operations endpoints
 
     //parameters endpoints
     Route::prefix('parameters')->controller(ParameterController::class)->group(function () {

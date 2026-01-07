@@ -19,8 +19,15 @@ class SyncOpRepository implements SyncOpRepositoryInterface
     {
         return SyncOp::where('ownerid', $id)
                     ->where('is_processed', '0') // or '1' depending on your filter
-                    ->get();
+                      ->get();
     }
+
+    //will use this when using command to get all unprocessed ops
+    // public function findAllUnprocess()
+    // {
+    //     return SyncOp::where('is_processed', '0') // or '1' depending on your filter
+    //                 ->get();
+    // }
 
     public function findArrears(object $payload)
     {
@@ -76,6 +83,6 @@ class SyncOpRepository implements SyncOpRepositoryInterface
         //     //resource/lang/exception.php
         //     // 'message' => trans('exception.sucess.message')
         //     'message' => "successfully deleted"
-        // ], Response::HTTP_OK);
+        // ], Response::HTTP_OK);_OK);TP_OK);
     }
 }

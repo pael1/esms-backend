@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command('app:update-unpai-ledger-fines')->daily();
+        //will use this when using command to get all unprocessed ops
+        // $schedule->command('sync:unpaid-ops')->everyFiveMinutes()->withoutOverlapping()->onOneServer(); // if you run multiple app servers
     })
     ->withMiddleware(function (Middleware $middleware) {
         //

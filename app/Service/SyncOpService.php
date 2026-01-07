@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Models\SyncOp;
 use Illuminate\Http\Response;
 use App\Models\StallOwnerAccount;
 use Illuminate\Support\Facades\DB;
@@ -55,7 +56,7 @@ class SyncOpService implements SyncOpServiceInterface
         try {
             return DB::transaction(function () use ($payload) {
                 $data = $this->syncOpRepository->create($payload);
-                $this->ledgerRepository->updateSync($payload);
+                $this->ledgerRepository->updateSync($payload, 1);
                 
                 return SyncOpResource::make($data);
             });
@@ -70,13 +71,24 @@ class SyncOpService implements SyncOpServiceInterface
 
     public function update(object $payload, string $id)
     {
-        // $user = $this->userRepository->update($payload, $id);
-
-        // return new UserResource($user);
+        $syncOp = SyncOp::findOrFail($id);
+        $syncOp->update($payload->all());  // Update the record with new data
+        return new SyncOpResource($syncOp);  // Return the updated SyncOp
     }
 
     public function delete(string $id)
     {
-        // return $this->userRepository->delete($id);
+        $syncOp = SyncOp::findOrFail($id);
+        $this->ledgerRepository->updateSync($syncOp, 0); // Update related ledger records to unsynced
+        $syncOp->delete();  // Delete the record
+        return SyncOpResource::make($syncOp);
+    }
+
+    public function paidManually(string $id)
+    {
+        $syncOp = SyncOp::findOrFail($id);
+        $this->ledgerRepository->paidManually($syncOp);
+        $this->syncOpRepository->updateById($syncOp->id, '3'); //3 means paid manually
+        return SyncOpResource::make($syncOp);
     }
 }

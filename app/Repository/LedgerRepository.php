@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Interface\Repository\LedgerRepositoryInterface;
 use App\Models\StallOwnerAccount;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
@@ -82,9 +83,14 @@ class LedgerRepository implements LedgerRepositoryInterface
     }
 
     // SYNC FUNCTIONS
-    public function updateSync(object $payload)
+    public function updateSync(object $payload, int $status)
     {
-        StallOwnerAccount::whereIn('stallOwnerAccountId', $payload['months'])->update(['is_sync' => 1]);
+        StallOwnerAccount::whereIn('stallOwnerAccountId', $payload['months'])->update(['is_sync' => $status]);
+    }
+
+    public function paidManually(object $payload)
+    {
+        StallOwnerAccount::whereIn('stallOwnerAccountId', $payload['months'])->update(['ORNum' => $payload['ornumber'], 'ORDate' => Carbon::now()->toDateString()]);
     }
 
     public function updateLedgerSync(array $payload)

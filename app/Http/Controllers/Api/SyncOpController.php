@@ -5,18 +5,21 @@ namespace App\Http\Controllers\Api;
 use App\Models\SyncOp;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreSyncOpRequest;
 use App\Http\Resources\SyncOpResource;
+use App\Http\Requests\StoreSyncOpRequest;
 use App\Interface\Service\SyncOpServiceInterface;
+use App\Interface\Repository\LedgerRepositoryInterface;
 
 class SyncOpController extends Controller
 {
 
     private $syncService;
+    private $ledgerRepository;
 
-    public function __construct(SyncOpServiceInterface $syncService)
+    public function __construct(SyncOpServiceInterface $syncService, LedgerRepositoryInterface $ledgerRepository)
     {
         $this->syncService = $syncService;
+        $this->ledgerRepository = $ledgerRepository;
     }
 
     // Display a listing of SyncOp records
@@ -52,16 +55,18 @@ class SyncOpController extends Controller
     // Update an existing SyncOp record
     public function update(Request $request, $id)
     {
-        $syncOp = SyncOp::findOrFail($id);
-        $syncOp->update($request->all());  // Update the record with new data
-        return new SyncOpResource($syncOp);  // Return the updated SyncOp
+        return $this->syncService->update($request, $id);
     }
 
     // Delete a SyncOp record
     public function destroy($id)
     {
-        $syncOp = SyncOp::findOrFail($id);
-        $syncOp->delete();  // Delete the record
-        return response()->noContent();  // Return a 204 No Content response
+        return $this->syncService->delete($id);
+    }
+
+    //paid manually update
+    public function paidManually($id)
+    {
+        return $this->syncService->paidManually($id);
     }
 }
