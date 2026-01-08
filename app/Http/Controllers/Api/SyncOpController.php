@@ -65,8 +65,8 @@ class SyncOpController extends Controller
     }
 
     //paid manually update
-    public function paidManually($id)
+    public function paidManually(Request $request, $id)
     {
-        return $this->syncService->paidManually($id);
+        return $this->syncService->paidManually($request, $id);
     }
 }

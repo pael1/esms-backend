@@ -84,11 +84,11 @@ class SyncOpService implements SyncOpServiceInterface
         return SyncOpResource::make($syncOp);
     }
 
-    public function paidManually(string $id)
+    public function paidManually(object $payload, string $id)
     {
         $syncOp = SyncOp::findOrFail($id);
         $this->ledgerRepository->paidManually($syncOp);
-        $this->syncOpRepository->updateById($syncOp->id, '3'); //3 means paid manually
+        $this->syncOpRepository->updateById($payload, $syncOp->id, '3'); //3 means paid manually
         return SyncOpResource::make($syncOp);
     }
 }

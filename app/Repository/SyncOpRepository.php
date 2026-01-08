@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use Carbon\Carbon;
 use App\Models\SyncOp;
 use App\Models\StallOwnerAccount;
 use App\Interface\Repository\SyncOpRepositoryInterface;
@@ -42,10 +43,15 @@ class SyncOpRepository implements SyncOpRepositoryInterface
         // return Parameter::where('fieldId', $id);
     }
 
-    public function updateById(string $id, string $status)
+    public function updateById(object $payload, string $id, string $status)
     {
-        return SyncOp::where('id', $id)
-            ->update(['is_processed' => $status]);
+        $userId = auth()->id();
+        return SyncOp::where('id', $id)->update([
+            'is_processed' => $status,
+            'paid_manually_by' => $userId,
+            'paid_manually_at' => Carbon::now(),
+            'reason' => $payload->reason,
+        ]);
     }
 
     public function create(object $payload)

@@ -13,5 +13,6 @@ class SyncOp extends Model
         'months' => 'array',
     ];
 
-    protected $fillable = ['ornumber', 'ownerid', 'months', 'is_processed'];
+    protected $fillable = ['ornumber', 'ownerid', 'months', 'is_processed', 'paid_manually_by',
+    'paid_manually_at','reason'];
 }
