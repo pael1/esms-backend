@@ -12,7 +12,9 @@ interface SyncOpRepositoryInterface
 
     public function findById(string $id);
 
-    public function updateById(object $payload, string $id, string $status);
+    public function updatePaidManuallyById(object $payload, string $id, string $status);
+    
+    public function updateById(string $id, string $status);
     
     public function create(object $payload);
 
