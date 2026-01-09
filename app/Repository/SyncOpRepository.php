@@ -23,12 +23,11 @@ class SyncOpRepository implements SyncOpRepositoryInterface
                       ->get();
     }
 
-    //will use this when using command to get all unprocessed ops
-    // public function findAllUnprocess()
-    // {
-    //     return SyncOp::where('is_processed', '0') // or '1' depending on your filter
-    //                 ->get();
-    // }
+    public function findAllUnprocess()
+    {
+        return SyncOp::where('is_processed', '0') // or '1' depending on your filter
+                    ->get();
+    }
 
     public function findArrears(object $payload)
     {

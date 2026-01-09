@@ -63,11 +63,11 @@ class SyncOpService implements SyncOpServiceInterface
                 $this->ledgerRepository->updateSync($payload, 1);
 
                 //process the sync function here
-                $awardee = $this->awardeeRepository->findById($payload->ownerid);
-                $unpaid_op = $this->syncOpRepository->findManyById($payload->ownerid);
-                if ($unpaid_op->isNotEmpty()) {
-                    ProcessUnpaidOP::dispatch($unpaid_op, $awardee);
-                }
+                // $awardee = $this->awardeeRepository->findById($payload->ownerid);
+                // $unpaid_op = $this->syncOpRepository->findManyById($payload->ownerid);
+                // if ($unpaid_op->isNotEmpty()) {
+                //     ProcessUnpaidOP::dispatch($unpaid_op, $awardee);
+                // }
                 
                 return SyncOpResource::make($data);
             });

@@ -21,4 +21,6 @@ interface SyncOpRepositoryInterface
     public function update(object $payload, string $id);
 
     public function delete(string $id);
+
+    public function findAllUnprocess();
 }

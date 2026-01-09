@@ -100,13 +100,18 @@ class AwardeeService implements AwardeeServiceInterface
 
         $awardee = $this->awardeeRepository->findById($ownerID);
 
-        $awardee->full_name = "{$awardee->firstname} " .
+        $awardee->full_name = trim(
+            ($awardee->firstname ?? '') . ' ' .
             ($awardee->midinit ? "{$awardee->midinit}. " : '') .
-            "{$awardee->lastname}";
-        $awardee->spouse_full_name = "{$awardee->spouseFirstname} " .
+            ($awardee->lastname ?? '')
+        );
+
+        $awardee->spouse_full_name = trim(
+            ($awardee->spouseFirstname ?? '') . ' ' .
             ($awardee->spouseMidint ? "{$awardee->spouseMidint}. " : '') .
-            "{$awardee->spouseLastname}";
-        //     logger($awardee->stallRentalDet);
+            ($awardee->spouseLastname ?? '')
+        );
+        
         // $awardee->rate_per_month = $awardee->stallRentalDet->stallProfile->ratePerDay * $days_in_month;
         $ratePerDay = $awardee->stallRentalDet?->stallProfile?->ratePerDay;
 

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ProcessUnpaidOP;
 use Illuminate\Console\Command;
 use App\Interface\Repository\SyncOpRepositoryInterface;
 
@@ -12,15 +13,10 @@ class SyncUnpaidOpsCommand extends Command
 
     public function handle(SyncOpRepositoryInterface $syncRepo): int
     {
-        // Example: get ownerIds that have unpaid ops
-
-        $unpaid = $syncRepo->findAllUnprocess();
-
-        if ($unpaid->isNotEmpty()) {
-            ProcessUnpaidOP::dispatch(
-                $unpaid->pluck('id')->all())->onQueue('sync');
+        $unProcessed = $syncRepo->findAllUnprocess();
+        if ($unProcessed->isNotEmpty()) {
+            ProcessUnpaidOP::dispatch($unProcessed);
         }
-
         return self::SUCCESS;
     }
 }
