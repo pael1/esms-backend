@@ -50,9 +50,14 @@ class Api
 
     public function checkORNumber($or_number)
     {
-        $response = Http::get("{$this->apiEndpoint}/api/receipts/{$or_number}");
-
-        return $response;
+        try {
+            $response = Http::timeout(10)->get("{$this->apiEndpoint}/api/receipts/{$or_number}");
+            return $response;
+        } catch (RequestException $e) {
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     public function createPayment(object $payload)
