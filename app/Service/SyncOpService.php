@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Models\SyncOp;
+use App\Jobs\ProcessUnpaidOP;
 use Illuminate\Http\Response;
 use App\Models\StallOwnerAccount;
 use Illuminate\Support\Facades\DB;
@@ -12,16 +13,19 @@ use App\Http\Resources\StallOwnerAccountResource;
 use App\Interface\Service\SyncOpServiceInterface;
 use App\Interface\Repository\LedgerRepositoryInterface;
 use App\Interface\Repository\SyncOpRepositoryInterface;
+use App\Interface\Repository\AwardeeRepositoryInterface;
 
 class SyncOpService implements SyncOpServiceInterface
 {
     private $syncOpRepository;
     private $ledgerRepository;
+    private $awardeeRepository;
 
-    public function __construct(SyncOpRepositoryInterface $syncOpRepository, LedgerRepositoryInterface $ledgerRepository)
+    public function __construct(SyncOpRepositoryInterface $syncOpRepository, LedgerRepositoryInterface $ledgerRepository, AwardeeRepositoryInterface $awardeeRepository)
     {
         $this->syncOpRepository = $syncOpRepository;
         $this->ledgerRepository = $ledgerRepository;
+        $this->awardeeRepository = $awardeeRepository;
     }
 
     public function findMany(object $payload)
@@ -57,6 +61,13 @@ class SyncOpService implements SyncOpServiceInterface
             return DB::transaction(function () use ($payload) {
                 $data = $this->syncOpRepository->create($payload);
                 $this->ledgerRepository->updateSync($payload, 1);
+
+                //process the sync function here
+                $awardee = $this->awardeeRepository->findById($payload->ownerid);
+                $unpaid_op = $this->syncOpRepository->findManyById($payload->ownerid);
+                if ($unpaid_op->isNotEmpty()) {
+                    ProcessUnpaidOP::dispatch($unpaid_op, $awardee);
+                }
                 
                 return SyncOpResource::make($data);
             });

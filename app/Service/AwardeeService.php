@@ -112,12 +112,6 @@ class AwardeeService implements AwardeeServiceInterface
 
         $awardee->rate_per_month = $ratePerDay ? $ratePerDay * $days_in_month : 0;
 
-        //process the sync function here
-        $unpaid_op = $this->syncOpRepository->findManyById($ownerID);
-        if ($unpaid_op->isNotEmpty()) {
-            ProcessUnpaidOP::dispatch($unpaid_op, $awardee);
-        }
-
         //testing for roles and permissions using spatie
         // $user = UserAccount::where('SystemUser_EmpId', 12345)->first();
         // $permissions = $user->getAllPermissions()->pluck('name');
